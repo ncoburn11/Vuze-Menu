@@ -42,7 +42,7 @@ It publishes the **Week of** the coming Monday.
 - **Deals:** from sheet `1U-1GkqFKb92WSr2AtFflDz_FgCciIZjsHdaUt7uPVE4`, tab "Current - 2026".
   - Use only rows where Brands includes VUZE and Confirmed? is TRUE.
   - A store-specific row beats a chain-wide row.
-  - **Never mention Flavorade in a deal on this site.** `L.cleanDeal` (tools/lib.js) drops Flavorade-only deals and keeps the VUZE side of shared ones; check the report's deals for any leftover "Flav".
+  - **Never mention Flavorade in a deal on this site.** `L.cleanDeal` (tools/lib.js) drops Flavorade-only deals and keeps the VUZE side of shared ones; check the report's deals for any leftover "Flav". It also writes the brand as VUZE (never Vuze).
 - **Only 6 months of weeks are kept.** Older weeks are deleted on every run.
 
 ## Steps
@@ -84,4 +84,4 @@ Data format is documented at the top of `data.js`. `index.html` needs no changes
 
 ## Style
 The page matches vuzeextracts.com: deep navy-teal (#071d26 to #030b10), one cyan accent (#55cbea), Jost/Proxima uppercase tracked headings,
-black "NEW STRAINS EVERY MONDAY" ticker, and a camera-viewfinder frame on the hero. Say "strains", not "flavors", in customer copy.
+black "NEW STRAINS EVERY MONDAY" ticker, and a camera-viewfinder frame on the hero. Say "strains", not "flavors", in customer copy. The brand is always VUZE in caps. Tagline: "LIVE RESIN. NO SHORTCUTS." The page has no footer (the Squarespace footer sits under it).

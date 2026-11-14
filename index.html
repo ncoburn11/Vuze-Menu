@@ -111,7 +111,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 select.chip{appearance:none;-webkit-appearance:none;padding-right:32px;background:rgba(0,0,0,.25) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2355cbea' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right 12px center}
 select.chip option{background:var(--bg);color:#fff}
 /* sections */
-main{padding-bottom:50px}
+main{padding-bottom:56px}
 .sec-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:28px 0 12px}
 .sec-title h2{font:800 clamp(19px,4.6vw,25px)/1.15 var(--head);letter-spacing:.1em;text-transform:uppercase;margin:0}
 .sec-title h2 span{color:var(--cyan)}
@@ -184,16 +184,6 @@ main{padding-bottom:50px}
 .hint{font-size:13px;color:var(--soft);margin:12px 0 0}
 .hint button{border:1px solid var(--edge);background:rgba(0,0,0,.25);border-radius:4px;padding:4px 10px;margin:2px;font:600 12px var(--head);letter-spacing:.08em;color:#fff}
 .hint button:hover{border-color:var(--cyan)}
-.std{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0 0;padding:0;list-style:none}
-.std li{border-top:2px solid var(--cyan);padding-top:9px;font:700 11px/1.3 var(--head);letter-spacing:.18em;text-transform:uppercase;color:#fff}
-.std li span{display:block;margin-top:3px;font:500 12.5px/1.35 var(--body);letter-spacing:0;text-transform:none;color:var(--dim)}
-@media(max-width:520px){.std{grid-template-columns:1fr}}
-footer{background:linear-gradient(180deg,var(--bg-3),#000);border-top:1px solid rgba(85,203,234,.65);color:var(--soft);font-size:13px;padding:26px 16px 34px}
-footer .wrap{display:flex;flex-direction:column;gap:6px;text-align:center}
-footer p{margin:0}
-footer b{color:#fff}
-footer .disc{margin-top:10px;font-size:12px;color:var(--dim);font-style:italic;max-width:62ch;align-self:center}
-footer a{color:var(--cyan)}
 mark{background:none;color:var(--cyan);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
 :focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 </style>
@@ -248,19 +238,6 @@ mark{background:none;color:var(--cyan);text-decoration:underline;text-decoration
 </div>
 
 <main class="wrap" id="view" aria-live="polite"></main>
-
-<footer>
-  <div class="wrap">
-    <p><b>Drop dates are subject to change.</b> Check the retailer's menu or call ahead.</p>
-    <p>Limited quantities. Strains may sell out quickly. For adults 21+ only.</p>
-    <ul class="std">
-      <li>100% Live Resin<span>The character of the original plant.</span></li>
-      <li>Zero Distillate<span>No fillers. Just the resin.</span></li>
-      <li>Low-Temp Extraction<span>Delicate terpenes, preserved.</span></li>
-    </ul>
-    <p class="disc">VUZE Extracts can only be found in licensed California dispensaries registered with the DCC. Any product purchased outside of a licensed CA dispensary cannot be guaranteed authentic. VUZE only operates Instagram from <a href="https://www.instagram.com/vuzeextracts/" target="_blank" rel="noopener">@VuzeExtracts</a>; any other account offering to resell VUZE is not official.</p>
-  </div>
-</footer>
 
 <script src="data.js"></script>
 <script src="geo.js"></script>

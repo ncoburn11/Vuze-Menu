@@ -1,0 +1,98 @@
+<!-- VUZE | RETAILER LOCATOR (Squarespace Code block on /retailer-map) -->
+<section id="vuze-store-locator">
+
+  <div class="vuze-store-header">
+    <div class="vuze-store-eyebrow">VUZE RETAIL NETWORK</div>
+    <h2>FIND YOUR <span>VUZE.</span></h2>
+    <p>Your next VUZE is closer than you think. Find a retailer near you.</p>
+    <div class="vuze-store-accent"></div>
+  </div>
+
+  <a class="vuze-drop-cta" href="/releases">
+    <span class="vuze-drop-kicker"><i></i>Updated every Monday</span>
+    <span class="vuze-drop-title">What just dropped near you?</span>
+    <span class="vuze-drop-text">The Viewfinder shows which shops got fresh VUZE this week, with their deals. Search by zip.</span>
+    <span class="vuze-drop-btn">Open the Viewfinder &rarr;</span>
+  </a>
+
+  <div class="vuze-store-map">
+    <!-- Elfsight Store Locator | VUZE -->
+    <script src="https://elfsightcdn.com/platform.js" async></script>
+    <div class="elfsight-app-b35f14ae-3faa-4384-9e68-d329c6b10ffb" data-elfsight-app-lazy></div>
+  </div>
+
+  <div class="vuze-store-footer">
+    <span class="vuze-footer-line"></span>
+    <span>LIVE RESIN. NO SHORTCUTS.</span>
+    <span class="vuze-footer-line"></span>
+  </div>
+
+</section>
+
+<style>
+/* Same tokens as the rest of vuzeextracts.com and the Viewfinder */
+#vuze-store-locator {
+  --cyan: #55cbea; --volt: #ffe02e; --edge: #2d3a46; --soft: #a9c4cf; --dim: #6f8b97;
+  width: 100%;
+  background: radial-gradient(ellipse at 50% 0, rgba(0,136,188,.2), rgba(0,0,0,0) 620px), linear-gradient(180deg, #071d26 0%, #04131b 55%, #030b10 100%);
+  color: #ffffff;
+  padding: 48px 0 35px;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* HEADER */
+.vuze-store-header { text-align: center; max-width: 850px; margin: 0 auto; padding: 0 20px 28px; }
+.vuze-store-eyebrow { color: var(--cyan); font-size: 11px; font-weight: 700; letter-spacing: .32em; margin-bottom: 14px; }
+.vuze-store-header h2 {
+  font-size: clamp(36px, 6vw, 66px); font-weight: 800; line-height: 1.02; letter-spacing: .05em;
+  text-transform: uppercase; margin: 0 0 16px; color: #ffffff;
+}
+.vuze-store-header h2 span { color: var(--cyan); text-shadow: 0 0 22px rgba(85,203,234,.35); }
+.vuze-store-header p { font-size: 15px; line-height: 1.6; color: var(--soft); margin: 0 auto; max-width: 520px; }
+.vuze-store-accent { width: 60px; height: 3px; border-radius: 2px; background: var(--volt); box-shadow: 0 0 10px rgba(255,224,46,.5); margin: 22px auto 0; }
+
+/* VIEWFINDER CALL-OUT */
+.vuze-drop-cta {
+  position: relative; display: grid; gap: 6px; max-width: 760px; margin: 0 auto 28px; padding: 18px 20px;
+  border: 1px solid var(--edge); border-radius: 10px; text-decoration: none !important; color: #fff;
+  background: radial-gradient(ellipse at 100% 0, rgba(85,203,234,.14), rgba(0,0,0,0) 60%), linear-gradient(160deg, rgba(18,47,64,.65), rgba(5,19,28,.9));
+  transition: border-color .15s;
+}
+.vuze-drop-cta:hover { border-color: var(--volt); }
+.vuze-drop-kicker { display: flex; align-items: center; gap: 8px; font-size: 10.5px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: var(--volt); }
+.vuze-drop-kicker i { width: 7px; height: 7px; background: var(--volt); transform: rotate(45deg); box-shadow: 0 0 8px rgba(255,224,46,.6); }
+.vuze-drop-title { font-size: clamp(19px, 3.6vw, 24px); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.vuze-drop-text { font-size: 14px; line-height: 1.5; color: var(--soft); }
+.vuze-drop-btn {
+  justify-self: start; margin-top: 6px; padding: 10px 16px; border: 1px solid #fff; border-radius: 6px;
+  font-size: 11.5px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; transition: all .15s;
+}
+.vuze-drop-cta:hover .vuze-drop-btn { background: var(--volt); border-color: var(--volt); color: #1a1600; }
+
+/* MAP */
+.vuze-store-map { width: 100%; max-width: 1450px; margin: 0 auto; padding: 0 18px; box-sizing: border-box; min-height: 480px; }
+.vuze-store-map iframe { display: block; max-width: 100%; border: 0 !important; border-radius: 8px; }
+
+/* FOOTER */
+.vuze-store-footer {
+  display: flex; justify-content: center; align-items: center; gap: 16px; margin: 30px auto 0; padding: 0 16px;
+  color: var(--dim); font-size: 10px; font-weight: 700; letter-spacing: .24em; text-align: center;
+}
+.vuze-footer-line { width: 38px; height: 1px; background: var(--cyan); opacity: .65; }
+
+/* MOBILE */
+@media (max-width: 767px) {
+  #vuze-store-locator { padding: 32px 0 25px; }
+  .vuze-store-header { padding: 0 16px 22px; }
+  .vuze-store-eyebrow { font-size: 10px; letter-spacing: .24em; margin-bottom: 12px; }
+  .vuze-store-header h2 { font-size: clamp(32px, 9vw, 46px); margin-bottom: 12px; }
+  .vuze-store-header p { font-size: 13px; }
+  .vuze-store-accent { margin-top: 18px; }
+  .vuze-drop-cta { margin: 0 12px 22px; padding: 16px; }
+  .vuze-store-map { padding: 0 8px; min-height: 400px; }
+  .vuze-store-map iframe { border-radius: 5px; }
+  .vuze-store-footer { margin-top: 24px; font-size: 9px; letter-spacing: .14em; gap: 10px; }
+  .vuze-footer-line { width: 22px; }
+}
+</style>

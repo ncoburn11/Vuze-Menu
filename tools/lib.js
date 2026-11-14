@@ -105,7 +105,7 @@ function dealFinder(sheet) {
   };
 }
 
-// VUZE site rule: a deal never mentions Flavorade. Parts about Flavorade only are dropped;
+// VUZE site rules: a deal never mentions Flavorade, and the brand is always written VUZE. Parts about Flavorade only are dropped;
 // shared deals keep the VUZE side ("40% off Flavorade and VUZE Wednesdays" -> "40% off VUZE Wednesdays").
 function cleanDeal(deal) {
   const FL = /\bflav(orade)?\b/i, VZ = /\bvuze\b/i;
@@ -118,7 +118,7 @@ function cleanDeal(deal) {
       .replace(/\s*(?:\+|&|and)\s*flav(?:orade)?\b/ig, '')
       .replace(/\s{2,}/g, ' ').trim();
   }).filter(x => x && !FL.test(x));
-  return parts.join(' / ');
+  return parts.join(' / ').replace(/\bvuze\b/ig, 'VUZE'); // the brand is always VUZE
 }
 
 module.exports = { cleanDeal, dealFinder, ROOT, norm, fixCollab, parseProduct, caDate, releaseWeek, cityFromAddress, readOrders, groupDeliveries, loadData, saveData };

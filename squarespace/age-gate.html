@@ -1,0 +1,62 @@
+<!-- VUZE | 21+ AGE GATE
+     Squarespace: Settings > Developer Tools > Code Injection > HEADER. Paste all of this and Save.
+     Shows once per visitor; a "Yes" is remembered for 30 days on that device. -->
+<style>
+  html.vz-gate, html.vz-gate body { overflow: hidden !important; }
+  #vz-age { position: fixed; inset: 0; z-index: 2147483647; display: flex; align-items: center; justify-content: center; padding: 20px;
+    background: radial-gradient(ellipse at 50% 0, rgba(0,136,188,.25), rgba(0,0,0,0) 60%), linear-gradient(180deg, #071d26 0%, #04131b 55%, #030b10 100%);
+    color: #fff; font-family: inherit; text-align: center; }
+  #vz-age .vz-box { position: relative; width: min(460px, 100%); padding: 44px 26px 34px; }
+  #vz-age .vz-c { position: absolute; width: 28px; height: 28px; border: 0 solid #ffe02e; filter: drop-shadow(0 0 7px rgba(255,224,46,.5)); }
+  #vz-age .c1 { top: 0; left: 0; border-top-width: 3px; border-left-width: 3px; }
+  #vz-age .c2 { top: 0; right: 0; border-top-width: 3px; border-right-width: 3px; }
+  #vz-age .c3 { bottom: 0; left: 0; border-bottom-width: 3px; border-left-width: 3px; }
+  #vz-age .c4 { bottom: 0; right: 0; border-bottom-width: 3px; border-right-width: 3px; }
+  #vz-age img { width: 70px; height: auto; display: block; margin: 0 auto 14px; filter: drop-shadow(0 0 14px rgba(85,203,234,.35)); }
+  #vz-age .vz-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .32em; color: #55cbea; text-transform: uppercase; margin: 0; }
+  #vz-age h2 { margin: 12px 0 0; font-size: clamp(30px, 8vw, 44px); line-height: 1; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: #fff; }
+  #vz-age h2 span { color: #55cbea; text-shadow: 0 0 20px rgba(85,203,234,.35); }
+  #vz-age p { margin: 14px auto 0; max-width: 30em; font-size: 15px; line-height: 1.5; color: #a9c4cf; }
+  #vz-age .vz-btns { display: flex; gap: 10px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+  #vz-age button { all: unset; box-sizing: border-box; cursor: pointer; min-width: 140px; padding: 14px 20px; border-radius: 6px; text-align: center;
+    font-size: 13px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+  #vz-age .vz-yes { background: #55cbea; color: #03141c; box-shadow: 0 0 18px rgba(85,203,234,.35); }
+  #vz-age .vz-yes:hover { background: #ffe02e; box-shadow: 0 0 18px rgba(255,224,46,.45); }
+  #vz-age .vz-no { border: 1px solid #fff; color: #fff; }
+  #vz-age .vz-no:hover { border-color: #ffe02e; color: #ffe02e; }
+  #vz-age button:focus-visible { outline: 2px solid #ffe02e; outline-offset: 3px; }
+  #vz-age .vz-tag { margin-top: 26px; font-size: 10px; font-weight: 700; letter-spacing: .24em; color: #6f8b97; text-transform: uppercase; }
+  #vz-age .vz-sorry { color: #ffe02e; font-weight: 700; }
+</style>
+<script>
+(function () {
+  var KEY = 'vuze-age-ok', DAYS = 30;
+  try { var t = +localStorage.getItem(KEY); if (t && Date.now() - t < DAYS * 864e5) return; } catch (e) {}
+  if (window.self !== window.top) return; // never inside an embed
+  document.documentElement.classList.add('vz-gate');
+  function show() {
+    if (document.getElementById('vz-age')) return;
+    var d = document.createElement('div');
+    d.id = 'vz-age'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-labelledby', 'vz-age-h');
+    d.innerHTML = '<div class="vz-box"><span class="vz-c c1"></span><span class="vz-c c2"></span><span class="vz-c c3"></span><span class="vz-c c4"></span>'
+      + '<img src="https://images.squarespace-cdn.com/content/v1/66b4f18e93a33a272c7e846d/3bc37e54-4df3-4cb0-9cde-a09bab689c1d/VUZE+Eye+logo.png?format=300w" alt="VUZE">'
+      + '<p class="vz-eyebrow">VUZE Extracts &middot; Live resin</p>'
+      + '<h2 id="vz-age-h">Are you <span>21+?</span></h2>'
+      + '<p class="vz-msg">You must be 21 or older to enter. VUZE is for adults 21+ in licensed California dispensaries.</p>'
+      + '<div class="vz-btns"><button type="button" class="vz-yes">Yes, I\'m 21+</button><button type="button" class="vz-no">No</button></div>'
+      + '<div class="vz-tag">Live resin. No shortcuts.</div></div>';
+    document.body.appendChild(d);
+    var yes = d.querySelector('.vz-yes'); yes.focus();
+    yes.addEventListener('click', function () {
+      try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {}
+      d.remove(); document.documentElement.classList.remove('vz-gate');
+    });
+    d.querySelector('.vz-no').addEventListener('click', function () {
+      d.querySelector('.vz-msg').innerHTML = '<span class="vz-sorry">Sorry, you must be 21 or older to visit this site.</span>';
+      d.querySelector('.vz-btns').remove();
+    });
+    d.addEventListener('keydown', function (e) { if (e.key === 'Tab') { e.preventDefault(); (document.activeElement === yes && d.querySelector('.vz-no') ? d.querySelector('.vz-no') : yes).focus(); } });
+  }
+  if (document.body) show(); else document.addEventListener('DOMContentLoaded', show);
+})();
+</script>
