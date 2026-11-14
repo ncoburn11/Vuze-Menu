@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>VUZE Viewfinder</title>
+<meta name="description" content="Find this week's VUZE live resin drops, search strains by tasting note, and see which California shops just got them.">
+<link rel="icon" href="https://images.squarespace-cdn.com/content/v1/66b4f18e93a33a272c7e846d/97953a08-0a48-49f3-9087-94ea15ab58eb/favicon.ico?format=100w">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700;800&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap">
+<style>
+/* Matches vuzeextracts.com: deep navy-teal, electric cyan accent, tracked uppercase type, a camera "viewfinder" motif */
+:root{
+  --bg:#071d26; --bg-2:#04131b; --bg-3:#030b10; --bar:#0c1a1e; --card-a:rgba(18,47,64,.65); --card-b:rgba(5,19,28,.9);
+  --edge:#2d3a46; --cyan:#55cbea; --cyan-d:#2ea9cc; --glow:rgba(85,203,234,.35); --ink:#fff; --soft:#a9c4cf; --dim:#6f8b97;
+  --line:rgba(85,203,234,.16); --ind:#a58bff; --sat:#ffc861;
+  --head:Jost,Futura,"Trebuchet MS","Helvetica Neue",Arial,sans-serif;
+  --body:"Proxima Nova",Figtree,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:var(--bg-3)}
+body{margin:0;min-height:100vh;color:var(--ink);font:16px/1.5 var(--body);
+  background:radial-gradient(ellipse at 50% 0,rgba(0,136,188,.22),rgba(0,0,0,0) 620px) no-repeat,linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 45%,var(--bg-3) 100%) no-repeat;background-color:var(--bg-3)}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:920px;margin:0 auto;padding:0 16px}
+/* ticker: black band, same as the homepage marquee */
+.ticker{background:#000;overflow:hidden;white-space:nowrap;border-bottom:1px solid var(--line)}
+.ticker .track{display:inline-flex;align-items:center;gap:26px;padding:11px 0;animation:tick 34s linear infinite}
+.ticker span{font:700 13px/1 var(--head);letter-spacing:.22em;color:#fff}
+.ticker i{width:7px;height:7px;background:var(--cyan);transform:rotate(45deg);box-shadow:0 0 10px var(--cyan)}
+@keyframes tick{to{transform:translateX(-50%)}}
+/* hero: framed like a camera viewfinder */
+.hero{padding:30px 0 10px}
+.vf{position:relative;text-align:center;padding:30px 18px 26px;margin:0 auto;max-width:760px}
+.vf .c{position:absolute;width:30px;height:30px;border:0 solid var(--cyan);filter:drop-shadow(0 0 6px var(--glow))}
+.vf .c1{top:0;left:0;border-top-width:3px;border-left-width:3px}
+.vf .c2{top:0;right:0;border-top-width:3px;border-right-width:3px}
+.vf .c3{bottom:0;left:0;border-bottom-width:3px;border-left-width:3px}
+.vf .c4{bottom:0;right:0;border-bottom-width:3px;border-right-width:3px}
+.rec{position:absolute;top:10px;left:42px;display:flex;align-items:center;gap:7px;font:700 11px/1 var(--head);letter-spacing:.22em;color:var(--soft)}
+.rec b{width:8px;height:8px;border-radius:50%;background:#ff3b4a;box-shadow:0 0 8px #ff3b4a;animation:rec 1.4s steps(2,jump-none) infinite}
+@keyframes rec{50%{opacity:.15}}
+.wk-tag{position:absolute;top:10px;right:42px;font:700 11px/1 var(--head);letter-spacing:.18em;color:var(--soft)}
+.eye{width:64px;height:auto;display:block;margin:6px auto 8px;filter:drop-shadow(0 0 14px var(--glow))}
+.eyebrow{font:600 12px/1.2 var(--head);letter-spacing:.32em;color:var(--cyan);margin:0;text-transform:uppercase}
+.hero h1{font:800 clamp(40px,10.5vw,76px)/.95 var(--head);letter-spacing:.06em;text-transform:uppercase;margin:12px 0 0}
+.hero h1 em{font-style:normal;color:var(--cyan);text-shadow:0 0 22px var(--glow)}
+.hero p.tag{margin:12px auto 0;max-width:30em;font:500 17px/1.4 var(--body);color:var(--soft)}
+.hero p.warn{margin:14px auto 0;display:inline-block;font:700 12px/1.4 var(--head);letter-spacing:.14em;text-transform:uppercase;color:#fff;border:1px solid var(--edge);border-radius:999px;padding:7px 14px;background:rgba(0,0,0,.25)}
+.hero p.warn span{color:var(--cyan)}
+#updated{display:block;margin-top:10px;font:600 13px/1.3 var(--body);color:var(--dim)}
+@media (prefers-reduced-motion:reduce){.ticker .track,.rec b{animation:none}}
+/* search + near me */
+.searchwrap{padding-top:10px;padding-bottom:4px}
+.search{position:relative;display:block}
+.search input{width:100%;font:500 17px/1.2 var(--body);padding:15px 48px;border-radius:8px;border:1px solid var(--edge);background:linear-gradient(160deg,var(--card-a),var(--card-b));color:#fff;outline:none;transition:border-color .15s,box-shadow .15s}
+.search input::placeholder{color:var(--dim)}
+.search input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(85,203,234,.18),0 0 24px rgba(85,203,234,.12)}
+.search svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--cyan)}
+.search .clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:rgba(255,255,255,.1);border-radius:6px;width:34px;height:34px;font-size:18px;line-height:1;display:none;color:#fff}
+.search.has .clear{display:block}
+.search input::-webkit-search-cancel-button{display:none}
+.near{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 2px 0;color:var(--soft);font:600 12px/1.2 var(--head);letter-spacing:.12em;text-transform:uppercase}
+.near input,.near select{border:1px solid var(--edge);background:rgba(0,0,0,.3);color:#fff;border-radius:6px;padding:8px 10px;font:600 15px/1 var(--body);letter-spacing:0}
+.near input{width:86px}
+.near input:focus,.near select:focus{outline:2px solid var(--cyan);outline-offset:1px}
+.near button{border:0;background:none;color:var(--cyan);text-decoration:underline;font:inherit;padding:4px}
+.near .locate{border:1px solid var(--cyan);border-radius:6px;text-decoration:none;padding:8px 12px;font:700 11px/1 var(--head);letter-spacing:.16em;text-transform:uppercase}
+.near .locate:hover{background:rgba(85,203,234,.12)}
+.near-msg{margin:8px 2px 0;font-size:13px;color:var(--cyan)}
+.mi{font:700 11px/1 var(--head);color:var(--cyan);margin-left:7px;letter-spacing:.06em}
+/* Flavors of the Week / Month */
+#fotw:empty{display:none}
+.picks{position:relative;margin:18px 0 6px;padding:16px;border:1px solid var(--edge);border-radius:10px;background:radial-gradient(ellipse at 100% 0,rgba(85,203,234,.14),rgba(0,0,0,0) 60%),linear-gradient(160deg,var(--card-a),var(--card-b))}
+.picks:before{content:"";position:absolute;inset:-1px;border-radius:10px;padding:1px;background:linear-gradient(120deg,var(--cyan),transparent 35%,transparent 65%,var(--cyan));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.seg{display:inline-flex;gap:0;border:1px solid var(--edge);border-radius:8px;padding:3px;background:rgba(0,0,0,.35);margin-bottom:4px}
+.seg button{border:0;background:none;border-radius:6px;padding:9px 14px;font:700 11.5px/1 var(--head);letter-spacing:.16em;text-transform:uppercase;color:var(--soft)}
+.seg button[aria-selected=true]{background:var(--cyan);color:#03141c;box-shadow:0 0 16px var(--glow)}
+.picks .sec-title{margin-top:14px}
+.picks .grid{display:grid;gap:10px;align-items:start}
+@media(min-width:640px){.picks .grid{grid-template-columns:1fr 1fr}}
+.picks .grid>*:only-child{grid-column:1/-1}
+.fotm-wk{font:700 11px var(--head);letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin:2px 0 6px}
+/* sticky tab bar */
+.controls{position:sticky;top:0;z-index:10;background:rgba(4,19,27,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin-top:14px}
+.controls .wrap{padding-top:10px;padding-bottom:10px}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--edge);border-radius:8px;overflow:hidden;background:rgba(0,0,0,.3)}
+.tabs button{position:relative;border:0;border-right:1px solid var(--edge);background:none;padding:11px 4px;min-height:46px;color:var(--soft);font:700 12px/1.15 var(--head);letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:5px;text-align:center}
+.tabs button:last-child{border-right:0}
+.tabs button:after{content:"";position:absolute;left:18%;right:18%;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--cyan);box-shadow:0 0 12px var(--cyan);transform:scaleX(0);transition:transform .2s}
+.tabs button[aria-selected=true]{color:#fff;background:rgba(85,203,234,.08)}
+.tabs button[aria-selected=true]:after{transform:none}
+.tabs .count{color:var(--cyan)}
+.tabheart{width:13px;height:13px;flex:none}
+@media(max-width:520px){.tabs button{font-size:10px;letter-spacing:.06em;padding:8px 2px}}
+/* filters */
+.filters{display:flex;gap:8px;overflow-x:auto;padding:16px 0 2px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.filters.has-notes{flex-wrap:wrap;overflow:visible}
+.notesq-wrap{flex:1 1 100%;display:flex;flex-direction:column;gap:7px;margin-top:6px}
+.notesq-wrap b{font:700 11px/1 var(--head);letter-spacing:.24em;text-transform:uppercase;color:var(--cyan)}
+.notesq{min-width:0;display:flex;align-items:center;gap:8px;border:1px solid var(--cyan);border-radius:8px;padding:0 14px;background:rgba(85,203,234,.06)}
+.notesq svg{width:15px;height:15px;flex:none;color:var(--cyan)}
+.notesq input{flex:1;min-width:0;background:none;border:0;outline:0;color:#fff;font:500 15px/1 var(--body);padding:11px 0}
+.notesq input::placeholder{color:var(--dim)}
+.chip{flex:none;border:1px solid var(--edge);background:rgba(0,0,0,.25);border-radius:6px;padding:8px 14px;font:700 11.5px/1.3 var(--head);letter-spacing:.16em;text-transform:uppercase;color:#fff}
+.chip:hover{border-color:var(--cyan)}
+.chip[aria-pressed=true]{background:var(--cyan);border-color:var(--cyan);color:#03141c}
+select.chip{appearance:none;-webkit-appearance:none;padding-right:32px;background:rgba(0,0,0,.25) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2355cbea' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right 12px center}
+select.chip option{background:var(--bg);color:#fff}
+/* sections */
+main{padding-bottom:50px}
+.sec-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:28px 0 12px}
+.sec-title h2{font:800 clamp(19px,4.6vw,25px)/1.15 var(--head);letter-spacing:.1em;text-transform:uppercase;margin:0}
+.sec-title h2 span{color:var(--cyan)}
+.sec-title small{color:var(--dim);font:600 12px/1.3 var(--head);letter-spacing:.12em;text-transform:uppercase;text-align:right}
+.grid{display:grid;gap:10px;align-items:start}
+@media(min-width:640px){.grid.two{grid-template-columns:1fr 1fr}}
+/* strain card (same look as "Latest Releases" on the homepage) */
+.card{position:relative;background:linear-gradient(160deg,var(--card-a),var(--card-b));border:1px solid var(--edge);border-radius:8px;overflow:hidden;box-shadow:0 4px 8px rgba(0,0,0,.1);transition:border-color .15s}
+.card:hover{border-color:rgba(85,203,234,.45)}
+.card.open{border-color:var(--cyan);box-shadow:0 0 0 1px rgba(85,203,234,.25),0 10px 30px rgba(0,0,0,.35)}
+.fl-head{display:flex;gap:12px;align-items:flex-start;padding:15px 12px 15px 16px;width:100%;text-align:left;background:none;border:0}
+.fl-main{flex:1;min-width:0}
+.fl-type{font:700 11px/1 var(--head);letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);display:flex;align-items:center;gap:7px}
+.fl-type:before{content:"";width:6px;height:6px;transform:rotate(45deg);background:currentColor}
+.fl-type.t-indica{color:var(--ind)} .fl-type.t-sativa{color:var(--sat)}
+.fl-name{font:800 19px/1.15 var(--head);letter-spacing:.08em;text-transform:uppercase;margin-top:7px}
+.fl-lab{margin-top:9px;font:700 10px/1 var(--head);letter-spacing:.24em;color:var(--dim);text-transform:uppercase}
+.fl-notes{margin-top:4px;font:italic 500 16px/1.35 var(--body);color:#e6f3f8}
+.fl-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center}
+.pill{display:inline-flex;align-items:center;font:700 10.5px/1 var(--head);letter-spacing:.16em;text-transform:uppercase;border-radius:4px;padding:5px 8px;white-space:nowrap}
+.pill.new{background:var(--cyan);color:#03141c;box-shadow:0 0 12px var(--glow)}
+.pill.where{background:none;color:var(--soft);font:500 13px/1.3 var(--body);letter-spacing:0;text-transform:none;padding-left:0}
+.fav{flex:none;border:0;background:none;width:42px;height:42px;margin:-6px -2px 0 0;border-radius:999px;display:grid;place-items:center}
+.fav svg{width:23px;height:23px;fill:none;stroke:var(--soft);stroke-width:2}
+.fav[aria-pressed=true] svg{fill:var(--cyan);stroke:var(--cyan);filter:drop-shadow(0 0 6px var(--glow))}
+.fl-more{display:none;border-top:1px solid var(--edge);padding:10px 16px 16px;background:rgba(0,0,0,.25)}
+.card.open .fl-more{display:block}
+.fl-more h4{margin:6px 0 6px;font:700 11px/1 var(--head);text-transform:uppercase;letter-spacing:.22em;color:var(--dim)}
+.wk{margin:12px 0 2px;font:700 12px/1.2 var(--head);letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
+.loc{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:15px}
+.loc:last-child{border-bottom:0}
+.loc .city{color:var(--soft);font-size:13px}
+.loc .deal{flex:none;max-width:48%;text-align:right;font-size:12.5px;font-weight:700;color:var(--cyan)}
+.toggle-more{border:0;background:none;color:var(--cyan);font:700 12px var(--head);letter-spacing:.16em;padding:10px 0 0;text-transform:uppercase}
+.caret{flex:none;color:var(--soft);transition:transform .2s;margin-top:2px}
+.card.open .caret{transform:rotate(180deg)}
+.viewstores{display:block;width:calc(100% - 32px);margin:0 16px 15px;border:1px solid #fff;background:transparent;color:#fff;border-radius:6px;padding:10px;font:700 11.5px/1 var(--head);letter-spacing:.2em;text-transform:uppercase}
+.viewstores:hover{border-color:var(--cyan);color:var(--cyan)}
+/* store card */
+.st{padding:15px 16px}
+.st-top,.drow-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.st-name{font:700 17px/1.2 var(--head);letter-spacing:.05em}
+.st-city{font-size:13px;color:var(--soft)}
+.st-date{flex:none;font:700 10.5px/1 var(--head);letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);border:1px solid rgba(85,203,234,.45);border-radius:4px;padding:5px 8px}
+.deal-b{display:inline-block;margin-top:9px;font-size:13px;font-weight:700;color:#03141c;background:var(--cyan);border-radius:4px;padding:4px 9px}
+.flist{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.flist button{border:1px solid var(--edge);background:rgba(0,0,0,.3);border-radius:4px;padding:6px 11px;font:600 12.5px/1.2 var(--head);letter-spacing:.08em;text-transform:uppercase;color:#fff}
+.flist button:hover{border-color:var(--cyan)}
+.flist button.hit{border-color:var(--cyan);background:rgba(85,203,234,.16)}
+.flist button.isnew:after{content:" NEW";font:800 9.5px var(--head);letter-spacing:.14em;color:var(--cyan)}
+.st-hist{margin-top:10px;font-size:13px;color:var(--dim)}
+.wkb{border:1px solid var(--edge);border-radius:8px;margin:0 0 12px;background:linear-gradient(160deg,var(--card-a),var(--card-b));overflow:hidden}
+.wkb[open]{border-color:rgba(85,203,234,.5)}
+.wkb>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:15px 16px}
+.wkb>summary::-webkit-details-marker{display:none}
+.wkb>summary h3{margin:0;font:800 15px/1.2 var(--head);letter-spacing:.14em;text-transform:uppercase}
+.wkb>summary h3 span{color:var(--cyan)}
+.wkb>summary small{color:var(--dim);font-size:13px;white-space:nowrap;margin-left:auto}
+.wkb[open]>summary .caret{transform:rotate(180deg)}
+.wkb .rows{padding:0 16px 10px}
+.drow{border-top:1px solid var(--line);padding:13px 0}
+.drow .st-name{font-size:15.5px}
+.drow .deal-b{margin-top:7px;font-size:12px}
+.drow .flist{margin-top:9px}
+/* misc */
+.empty{text-align:center;color:var(--soft);padding:40px 10px}
+.empty b{display:block;color:#fff;font:800 17px var(--head);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.more-btn{display:flex;align-items:center;gap:8px;margin:18px auto 0;border:1px solid #fff;background:transparent;color:#fff;font:700 12.5px var(--head);letter-spacing:.2em;text-transform:uppercase;border-radius:6px;padding:13px 24px}
+.more-btn:hover{background:var(--cyan);border-color:var(--cyan);color:#03141c}
+.hint{font-size:13px;color:var(--soft);margin:12px 0 0}
+.hint button{border:1px solid var(--edge);background:rgba(0,0,0,.25);border-radius:4px;padding:4px 10px;margin:2px;font:600 12px var(--head);letter-spacing:.08em;color:#fff}
+.hint button:hover{border-color:var(--cyan)}
+.std{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0 0;padding:0;list-style:none}
+.std li{border-top:2px solid var(--cyan);padding-top:9px;font:700 11px/1.3 var(--head);letter-spacing:.18em;text-transform:uppercase;color:#fff}
+.std li span{display:block;margin-top:3px;font:500 12.5px/1.35 var(--body);letter-spacing:0;text-transform:none;color:var(--dim)}
+@media(max-width:520px){.std{grid-template-columns:1fr}}
+footer{background:linear-gradient(180deg,var(--bg-3),#000);border-top:1px solid rgba(85,203,234,.65);color:var(--soft);font-size:13px;padding:26px 16px 34px}
+footer .wrap{display:flex;flex-direction:column;gap:6px;text-align:center}
+footer p{margin:0}
+footer b{color:#fff}
+footer .disc{margin-top:10px;font-size:12px;color:var(--dim);font-style:italic;max-width:62ch;align-self:center}
+footer a{color:var(--cyan)}
+mark{background:none;color:var(--cyan);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="ticker" aria-label="New strains every Monday">
+  <div class="track" id="ticker"></div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="vf">
+      <span class="c c1"></span><span class="c c2"></span><span class="c c3"></span><span class="c c4"></span>
+      <span class="rec" aria-hidden="true"><b></b>LIVE</span><span class="wk-tag" id="wkTag" aria-hidden="true"></span>
+      <img class="eye" src="https://images.squarespace-cdn.com/content/v1/66b4f18e93a33a272c7e846d/3bc37e54-4df3-4cb0-9cde-a09bab689c1d/VUZE+Eye+logo.png?format=300w" alt="VUZE">
+      <p class="eyebrow">Fresh drops &middot; Live resin</p>
+      <h1>The <em>Viewfinder.</em></h1>
+      <p class="tag">Wanna go sightseeing &amp; find the best VUZE? Search any strain, tasting note, or shop.</p>
+      <p class="warn">Strains sell out fast. <span>Call the shop before you roll.</span></p>
+      <span id="updated"></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap searchwrap">
+    <label class="search" id="searchBox">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Try &ldquo;Papaya&rdquo;, &ldquo;Palomita&rdquo;, or &ldquo;San Diego&rdquo;" autocomplete="off" enterkeyhint="search" aria-label="Search strains, tasting notes, or shops">
+      <button class="clear" type="button" aria-label="Clear search">&times;</button>
+    </label>
+    <div class="near" id="near">
+      <span>Near zip</span>
+      <input id="zip" inputmode="numeric" maxlength="5" placeholder="92101" aria-label="Your zip code" autocomplete="postal-code">
+      <span>within</span>
+      <select id="miles" aria-label="Distance"><option>5</option><option selected>10</option><option>25</option><option>50</option></select>
+      <span>miles</span>
+      <button type="button" id="locate" class="locate">Use my location</button>
+      <button type="button" id="nearClear" hidden>Clear</button>
+    </div>
+    <p class="near-msg" id="nearMsg" hidden></p>
+  </div>
+<div class="wrap" id="fotw"></div>
+<div class="controls">
+  <div class="wrap">
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="week">This Week</button>
+      <button role="tab" data-tab="flavors">All Strains</button>
+      <button role="tab" data-tab="all">All-Time</button>
+      <button role="tab" data-tab="saved"><svg class="tabheart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.8 4.5c2.1 0 3.6 1.2 5.2 3 1.6-1.8 3.1-3 5.2-3 3.8 0 5.9 3.9 4.4 7.3C19.5 16.4 12 21 12 21z" fill="currentColor"/></svg> Saved <span class="count" id="favCount"></span></button>
+    </nav>
+  </div>
+</div>
+
+<main class="wrap" id="view" aria-live="polite"></main>
+
+<footer>
+  <div class="wrap">
+    <p><b>Drop dates are subject to change.</b> Check the retailer's menu or call ahead.</p>
+    <p>Limited quantities. Strains may sell out quickly. For adults 21+ only.</p>
+    <ul class="std">
+      <li>100% Live Resin<span>The character of the original plant.</span></li>
+      <li>Zero Distillate<span>No fillers. Just the resin.</span></li>
+      <li>Low-Temp Extraction<span>Delicate terpenes, preserved.</span></li>
+    </ul>
+    <p class="disc">VUZE Extracts can only be found in licensed California dispensaries registered with the DCC. Any product purchased outside of a licensed CA dispensary cannot be guaranteed authentic. VUZE only operates Instagram from <a href="https://www.instagram.com/vuzeextracts/" target="_blank" rel="noopener">@VuzeExtracts</a>; any other account offering to resell VUZE is not official.</p>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="geo.js"></script>
+<script src="flavors-of-the-month.js"></script>
+<script>
+(() => {
+const R = window.RELEASES;
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const fmt = w => { const [, m, d] = w.split('-'); return MONTHS[+m - 1] + ' ' + (+d); };
+
+/* ---------- model ---------- */
+const products = R.products.map(([name, collab, type, notes], i) => ({
+  i, name, collab, type, notes, drops: [], firstNew: null,
+  hay: norm([name, type, notes, 'vuze', name.replace(/\s+/g, '')].join(' '))
+}));
+const allWeeks = R.drops.map(d => d[0]).sort();
+const newestWeek = allWeeks[allWeeks.length - 1] || '';
+const addDays = (w, n) => { const d = new Date(w + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+const CUTOFF = newestWeek ? addDays(newestWeek, -182) : '';   // show 6 months of drops
+const drops = R.drops.filter(d => d[0] >= CUTOFF).map(([week, shop, city, deal, ids], i) => {
+  const d = { i, week, shop, city, deal, ids, hay: norm([shop, city, deal].join(' ')) };
+  ids.forEach(id => products[id].drops.push(d));
+  return d;
+});
+const weeks = [...new Set(drops.map(d => d.week).concat(Object.keys(R.newFlavors).filter(w => w >= CUTOFF)))].sort().reverse();
+const latest = weeks[0];
+Object.keys(R.newFlavors).sort().forEach(w => R.newFlavors[w].forEach(id => { if (!products[id].firstNew) products[id].firstNew = w; }));
+products.forEach(p => {
+  p.drops.sort((a, b) => b.week.localeCompare(a.week));
+  p.hayStores = ' ' + norm([...new Set(p.drops.flatMap(d => [d.shop, d.city]))].join(' ')); // All Flavors: find flavors by store or city
+  p.last = p.drops[0] ? p.drops[0].week : (p.firstNew || '');
+  p.isNew = (R.newFlavors[latest] || []).includes(p.i);
+  p.recentStores = new Set(p.drops.filter(d => d.week >= weeks[Math.min(3, weeks.length - 1)]).map(d => d.shop + '|' + d.city)).size;
+});
+// stores: unique shop+city, newest drop first
+const storeMap = new Map();
+drops.forEach(d => {
+  const k = d.shop + '|' + d.city;
+  if (!storeMap.has(k)) storeMap.set(k, { shop: d.shop, city: d.city, drops: [] });
+  storeMap.get(k).drops.push(d);
+});
+const stores = [...storeMap.values()].map(s => (s.drops.sort((a, b) => b.week.localeCompare(a.week)), s.latest = s.drops[0], s))
+  .sort((a, b) => b.latest.week.localeCompare(a.latest.week) || a.shop.localeCompare(b.shop));
+const live = products.filter(p => p.drops.length || (p.firstNew && p.firstNew >= CUTOFF));
+const FOUR_WK = weeks[Math.min(3, weeks.length - 1)];
+// Flavors of the Month: logged week by week in flavors-of-the-month.js; show the past 4 weeks of picks.
+const FOTM = window.FLAVORS_OF_THE_MONTH || {};
+const findP = x => { const [name, collab] = String(x).split('|').map(s => s.trim());
+  return live.filter(p => norm(p.name) === norm(name) && (!collab || norm(p.collab) === norm(collab))).sort((a, b) => b.last.localeCompare(a.last))[0]; };
+const picks = [...new Set(Object.keys(FOTM).filter(w => w >= FOUR_WK).sort().reverse()
+  .flatMap(w => FOTM[w].map(findP)).filter(Boolean))];
+const weekPicks = [...new Set((FOTM[latest] || []).map(findP).filter(Boolean))];
+const collabs = [...new Set(live.map(p => p.collab || 'Flavorade'))].sort((a, b) => a === 'Flavorade' ? -1 : b === 'Flavorade' ? 1 : a.localeCompare(b));
+
+$('#updated').textContent = 'Updated for the week of ' + fmt(latest);
+$('#wkTag').textContent = 'WK ' + fmt(latest).toUpperCase();
+{ const unit = `<span>NEW STRAINS EVERY MONDAY</span><i></i><span>LIVE RESIN. NO SHORTCUTS.</span><i></i>`;
+  $('#ticker').innerHTML = unit.repeat(8); }
+
+/* ---------- state ---------- */
+const store = {
+  get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+const favKey = p => (p.collab + '|' + p.name).toLowerCase();
+let favs = new Set(store.get('vuze-favs', []));
+const S = { tab: 'week', q: '', type: '', collab: '', city: '', sort: 'new', limit: 40, open: new Set(), weeks: new Set(), pick: 'week', tq: '', weekAll: new Set(), miles: 10 };
+const params = new URLSearchParams(location.hash.slice(1));
+if (params.get('tab')) S.tab = ({ stores: 'all', fotm: 'week' })[params.get('tab')] || params.get('tab');
+if (params.get('q')) S.q = params.get('q');
+
+/* ---------- helpers ---------- */
+// Collab names count as one word, so "Kush Co" and "KushCo" (or "Wizard Trees" / "WizardTrees") search the same.
+const COLLAB_FIX = [...new Set(R.products.map(p => p[1]).filter(c => /\s/.test(c)))].map(c => [norm(c), norm(c).replace(/\s+/g, '')]);
+const terms = () => { let q = norm(S.q).replace(/\s+/g, ' '); COLLAB_FIX.forEach(([a, b]) => { q = q.split(a).join(b); }); return q.split(' ').filter(Boolean); };
+// A search word must match the start of a word ("sac" finds Sacramento, not "Kush Sack"... and "la" not "Black").
+const wordHit = (hay, x) => hay.startsWith(x) || hay.includes(' ' + x) || hay.includes('-' + x) || hay.includes('(' + x) || hay.includes('|' + x);
+const hits = (hay, t) => t.every(x => wordHit(hay, x));
+const matchP = (p, t) => hits(p.hay, t);
+const matchPStores = (p, t) => hits(p.hay + p.hayStores, t);
+const typeClass = t => /^indica/i.test(t) ? 't-indica' : /^sativa/i.test(t) ? 't-sativa' : 't-hybrid';
+const typeFilter = p => {
+  if (!S.type) return true;
+  if (S.type === 'Indica') return /^Indica/.test(p.type);
+  if (S.type === 'Sativa') return /^Sativa/.test(p.type);
+  return /Hybrid/.test(p.type);
+};
+const collabFilter = p => !S.collab || (p.collab || 'Flavorade') === S.collab;
+const cityFilter = d => !S.city || d.city === S.city;
+// Near me: distance from the shopper's zip to each store (stores without one location, like All Stiiizy Shops, are left out).
+const GEO = window.GEO || { stores: {}, zips: {} };
+const miles = (a, b) => { const r = x => x * Math.PI / 180, dLa = r(b[0] - a[0]), dLo = r(b[1] - a[1]);
+  const h = Math.sin(dLa / 2) ** 2 + Math.cos(r(a[0])) * Math.cos(r(b[0])) * Math.sin(dLo / 2) ** 2; return 3958.8 * 2 * Math.asin(Math.sqrt(h)); };
+const distOf = d => { if (!S.zipPt) return null; const g = GEO.stores[d.shop + '|' + (d.city || '')]; return g ? miles(S.zipPt, g) : null; };
+const near = d => { if (!S.zipPt) return true; const m = distOf(d); return m != null && m <= S.miles; };
+const byDist = (a, b) => (distOf(a) ?? 1e9) - (distOf(b) ?? 1e9);
+const miTag = d => { const m = distOf(d); return m == null ? '' : `<span class="mi">${m < 10 ? m.toFixed(1) : Math.round(m)} mi</span>`; };
+const weekTag = w => `Week of ${fmt(w)}`;
+function hl(text) {
+  // One pass over the raw text, so a term can never match inside an inserted <mark> tag.
+  const t = terms().filter(x => x.length >= 2).sort((a, b) => b.length - a.length);
+  if (!t.length) return esc(text);
+  const re = new RegExp(t.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'ig');
+  const raw = String(text); let out = '', last = 0, m;
+  while ((m = re.exec(raw))) { out += esc(raw.slice(last, m.index)) + '<mark>' + esc(m[0]) + '</mark>'; last = m.index + m[0].length; }
+  return out + esc(raw.slice(last));
+}
+const heart = '<svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.8 4.5c2.1 0 3.6 1.2 5.2 3 1.6-1.8 3.1-3 5.2-3 3.8 0 5.9 3.9 4.4 7.3C19.5 16.4 12 21 12 21z"/></svg>';
+const caret = '<svg class="caret" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg>';
+
+function flavorCard(p, o = {}) {
+  const open = S.open.has(p.i);
+  const recent = p.drops.filter(cityFilter).filter(near).sort((a, b) => S.zipPt ? byDist(a, b) || b.week.localeCompare(a.week) : 0);
+  const where = recent.length
+    ? (S.zipPt ? `Nearest: ${esc(recent[0].shop)}, ${(distOf(recent[0]) || 0).toFixed(1)} mi · ${weekTag(recent[0].week)}`
+       : `Last drop ${fmt(recent[0].week)} · ${p.recentStores || recent.length} store${(p.recentStores || recent.length) === 1 ? '' : 's'} lately`)
+    : (S.zipPt ? `Not within ${S.miles} mi yet` : 'Coming soon');
+  let more = '';
+  if (open) {
+    const max = S['all' + p.i] ? 999 : 12;
+    let lastW = '', rows = '';
+    recent.slice(0, max).forEach(d => {
+      if (!S.zipPt && d.week !== lastW) { rows += `<div class="wk">Week of ${fmt(d.week)}${d.week === latest ? ' · this week' : ''}</div>`; lastW = d.week; }
+      rows += `<div class="loc"><div><div>${esc(d.shop)}${miTag(d)}</div><div class="city">${esc(d.city)}${S.zipPt ? ' · ' + weekTag(d.week) : ''}</div></div>${d.deal ? `<div class="deal">${esc(d.deal)}</div>` : ''}</div>`;
+    });
+    more = `<div class="fl-more"><h4>Where it dropped${S.zipPt ? ` within ${S.miles} mi of ${S.zip}` : ''}</h4>${rows || '<div class="city">No store drops listed yet.</div>'}
+      ${recent.length > max ? `<button class="toggle-more" data-all="${p.i}">Show all ${recent.length} drops</button>` : ''}</div>`;
+  }
+  return `<article class="card${open ? ' open' : ''}" data-p="${p.i}">
+    <div style="display:flex">
+      <button class="fl-head" data-toggle="${p.i}" aria-expanded="${open}">
+        <div class="fl-main">
+          ${p.type ? `<div class="fl-type ${typeClass(p.type)}">${esc(p.type)}</div>` : ''}
+          <div class="fl-name">${hl(p.name)}</div>
+          ${p.notes ? `<div class="fl-lab">Tasting notes</div><div class="fl-notes">&ldquo;${hl(p.notes)}&rdquo;</div>` : ''}
+          ${o.compact && !p.isNew ? '' : `<div class="fl-meta">
+            ${p.isNew ? '<span class="pill new">New</span>' : ''}
+            ${o.compact ? '' : `<span class="pill where">${where}</span>`}
+          </div>`}
+        </div>${caret}
+      </button>
+      <button class="fav" data-fav="${p.i}" aria-pressed="${favs.has(favKey(p))}" aria-label="Save ${esc(p.name)}">${heart}</button>
+    </div>${o.compact ? `<button class="viewstores" data-toggle="${p.i}">${open ? 'Hide Stores' : 'View All Stores'}</button>` : ''}${more}
+  </article>`;
+}
+
+function storeCard(s, d, opts = {}) {
+  const t = terms();
+  const chips = d.ids.map(id => products[id]).map(p =>
+    `<button data-goto="${p.i}" class="${p.isNew && d.week === latest ? 'isnew ' : ''}${t.length && matchP(p, t) ? 'hit' : ''}">${esc(p.name)}</button>`).join('');
+  const older = opts.history ? s.drops.filter(x => x !== d).slice(0, 3).map(x => fmt(x.week)).join(', ') : '';
+  return `<article class="card st">
+    <div class="st-top"><div><div class="st-name">${hl(s.shop)}${miTag(d)}</div><div class="st-city">${hl(s.city)}</div></div>
+    <span class="st-date">${weekTag(d.week)}</span></div>
+    ${d.deal ? `<span class="deal-b">${hl(d.deal)}</span>` : ''}
+    <div class="flist">${chips}</div>
+    ${older ? `<div class="st-hist">Earlier drops: ${older}</div>` : ''}
+  </article>`;
+}
+
+function filterBar(kind) {
+  const types = ['Indica', 'Hybrid', 'Sativa'];
+  let h = '<div class="filters">';
+  if (true) {
+    h += types.map(t => `<button class="chip" data-type="${t}" aria-pressed="${S.type === t}">${t}</button>`).join('');
+  }
+  if (kind === 'flavors') h = h.replace('<div class="filters">', '<div class="filters has-notes">');
+  if (kind === 'flavors') h += `<select class="chip" data-sel="sort" aria-label="Sort"><option value="new"${S.sort === 'new' ? ' selected' : ''}>Newest drops</option><option value="az"${S.sort === 'az' ? ' selected' : ''}>A–Z</option><option value="pop"${S.sort === 'pop' ? ' selected' : ''}>Most stores</option></select>`;
+  if (kind === 'flavors') h += `<div class="notesq-wrap"><b>Search by strain or tasting note</b><label class="notesq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="notesq" type="search" value="${esc(S.tq)}" placeholder="Try &ldquo;Peach&rdquo;, &ldquo;Coffee&rdquo;, or &ldquo;Onions&rdquo;" aria-label="Search by strain or tasting note" autocomplete="off"></label></div>`;
+  return h + '</div>';
+}
+const empty = (title, msg) => `<div class="empty"><b>${title}</b>${msg}${didYouMean()}</div>`;
+// "Did you mean" for typos (bluberry -> blueberry, runts -> runtz)
+const VOCAB = [...new Set(products.concat([]).flatMap(p => [p.name, p.collab]).concat(drops.flatMap(d => [d.shop, d.city]))
+  .flatMap(x => norm(x || '').split(/[^a-z0-9]+/)).filter(w => w.length >= 3))];
+function lev(a, b) {
+  const m = a.length, n = b.length, d = Array.from({ length: m + 1 }, (_, i) => [i]);
+  for (let j = 1; j <= n; j++) d[0][j] = j;
+  for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) d[i][j] = Math.min(d[i-1][j] + 1, d[i][j-1] + 1, d[i-1][j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+  return d[m][n];
+}
+function didYouMean() {
+  const t = terms(); if (!t.length) return '';
+  let changed = false;
+  const fixed = t.map(x => {
+    if (x.length < 3 || VOCAB.some(w => w.startsWith(x))) return x;
+    let best = null, bd = (x.length >= 6 ? 2 : 1) + 1;
+    for (const w of VOCAB) {
+      const dd = Math.min(lev(x, w), w.length > x.length ? lev(x, w.slice(0, x.length)) : 99);
+      if (dd < bd || (dd === bd && best && w.length < best.length)) { bd = dd; best = w; }
+    }
+    if (best) { changed = true; return best; }
+    return x;
+  });
+  return changed ? `<p class="hint">Did you mean <button data-try="${esc(fixed.join(' '))}">${esc(fixed.join(' '))}</button>?</p>` : '';
+}
+const suggest = `<p class="hint">Try: ${['papaya', 'peach', 'gas', 'chocolate', 'onions', 'San Diego'].map(x => `<button data-try="${x}">${x}</button>`).join('')}</p>`;
+
+/* ---------- views ---------- */
+function viewWeek() {
+  const t = terms();
+  const newP = (R.newFlavors[latest] || []).map(id => products[id]).filter(p => matchP(p, t) && typeFilter(p) && collabFilter(p));
+  const wkDrops = drops.filter(d => d.week === latest && near(d) &&
+    (!t.length || hits(d.hay, t) || d.ids.some(id => matchP(products[id], t))));
+  const shops = new Set(wkDrops.map(d => d.shop + d.city)).size;
+  let h = filterBar('week');
+  h += `<div class="sec-title"><h2>New strains <span>· week of ${fmt(latest)}</span></h2><small>${newP.length} new</small></div>`;
+  h += newP.length ? `<div class="grid">${newP.map(p => flavorCard(p, { compact: true })).join('')}</div>`
+    : (R.newFlavors[latest] || []).length ? empty('No new strains match', 'Clear your search or filters to see all of this week\'s drops.')
+    : `<div class="empty"><b>No brand-new strains this week</b>Restocks are rolling out below. New strains drop every Monday.</div>`;
+  h += `<div class="sec-title"><h2>Fresh drops <span>this week</span></h2><small>${shops} store${shops === 1 ? '' : 's'}${S.city ? ' in ' + esc(S.city) : ''}</small></div>`;
+  if (S.zipPt) wkDrops.sort(byDist);
+  const shown = wkDrops;
+  h += wkDrops.length ? `<div class="grid two">${shown.map(d => storeCard(storeMap.get(d.shop + '|' + d.city), d)).join('')}</div>` + (wkDrops.length > shown.length ? `<button class="more-btn" data-allstores>Show all ${wkDrops.length} stores</button>` : '')
+    : empty(S.zipPt ? `No drops within ${S.miles} miles this week` : 'No stores found this week', S.zipPt ? 'Try a bigger distance, or the All-Time tab.' : 'Try the All Time tab for earlier drops.');
+  return h;
+}
+
+function viewFlavors() {
+  const t = terms();
+  // tasting-notes search: comma-separated tastes match ANY; words inside one taste must all appear
+  const tastes = S.tq.split(',').map(x => norm(x).split(/\s+/).filter(Boolean)).filter(x => x.length);
+  const noteHit = p => !tastes.length || tastes.some(ws => ws.every(w => norm((p.name || '') + ' ' + (p.notes || '')).includes(w)));
+  let list = live.filter(p => matchPStores(p, t) && typeFilter(p) && collabFilter(p) && noteHit(p) && (!S.zipPt || p.drops.some(near)));
+  if (S.sort === 'az') list.sort((a, b) => a.name.localeCompare(b.name));
+  else if (S.sort === 'pop') list.sort((a, b) => b.recentStores - a.recentStores || b.drops.length - a.drops.length);
+  else list.sort((a, b) => b.last.localeCompare(a.last) || b.recentStores - a.recentStores);
+  let h = filterBar('flavors');
+  h += `<div class="sec-title"><h2>All <span>strains</span></h2><small>${list.length} of ${live.length}</small></div>`;
+  h += list.length ? `<div class="grid">${list.slice(0, S.limit).map(flavorCard).join('')}</div>` : empty('Nothing matches “' + esc(S.q || S.tq) + '”', 'Try another taste, like papaya, peach, gas or onions.');
+  if (list.length > S.limit) h += `<button class="more-btn" data-more>Show ${Math.min(40, list.length - S.limit)} more →</button>`;
+  return h;
+}
+
+// Same priority rule as the Sunday Flavors of the Week picks (rules.json / tools/weekly.js): fruity, then gassy.
+const FRUITY = new RegExp('\\b(' + ["fruit", "berry", "cherry", "grape", "mango", "peach", "lemon", "lime", "orange", "citrus", "melon", "pineapple", "apple", "tropical", "punch", "candy", "juice", "tangie", "papaya", "guava", "plum", "apricot", "kiwi", "mint"].join('|') + ')', 'i');
+const GASSY = new RegExp('\\b(' + ["gas", "fuel", "diesel", "chem", "og", "skunk", "kush", "petrol", "garlic", "onion", "funk", "rubber", "mushroom"].join('|') + ')', 'i');
+function fotwTier(p) {
+  const tx = (p.notes || '') + ' ' + p.name;
+  if (FRUITY.test(tx)) return 8;
+  if (GASSY.test(tx)) return 9;
+  return 10;
+}
+function fotmContent() {
+  const ws = Object.keys(FOTM).filter(w => w >= FOUR_WK).sort().reverse();
+  let h = `<div class="sec-title"><h2>Strains of <span>the Month</span></h2><small>Past 4 weeks</small></div>`;
+  const picked = new Map(); // product -> newest week it was picked
+  ws.forEach(w => FOTM[w].map(findP).filter(Boolean).forEach(p => { if (!picked.has(p)) picked.set(p, w); }));
+  if (!picked.size) return h + empty('No picks yet', 'Strains of the Week are added every Sunday.');
+  const list = [...picked.keys()].sort((a, b) => fotwTier(a) - fotwTier(b) || b.recentStores - a.recentStores || a.name.localeCompare(b.name));
+  return h + `<div class="grid">${list.map(p => `<div><div class="fotm-wk">Picked week of ${fmt(picked.get(p))}</div>${flavorCard(p, { compact: true })}</div>`).join('')}</div>`;
+}
+function weekPicksBlock() {
+  if (!weekPicks.length && !picks.length) return '';
+  const month = S.pick === 'month';
+  const main = month ? fotmContent()
+    : `<div class="sec-title"><h2>Strains of <span>the Week</span></h2><small>Week of ${fmt(latest)}</small></div><div class="grid">${weekPicks.map(p => flavorCard(p, { compact: true })).join('')}</div>`;
+  return `<section class="picks"><div class="seg" role="tablist">
+      <button role="tab" data-pick="week" aria-selected="${!month}">Of the Week</button>
+      <button role="tab" data-pick="month" aria-selected="${month}">Of the Month</button>
+    </div>${main}</section>`;
+}
+
+function dropRow(d) {
+  const t = terms();
+  const chips = d.ids.map(id => products[id]).map(p =>
+    `<button data-goto="${p.i}" class="${p.firstNew === d.week ? 'isnew ' : ''}${t.length && matchP(p, t) ? 'hit' : ''}">${esc(p.name)}</button>`).join('');
+  return `<div class="drow"><div class="drow-top"><div><div class="st-name">${hl(d.shop)}${miTag(d)}</div><div class="st-city">${hl(d.city)}</div></div><span class="st-date">${weekTag(d.week)}</span></div>
+    ${d.deal ? `<span class="deal-b">${hl(d.deal)}</span>` : ''}<div class="flist">${chips}</div></div>`;
+}
+
+function weekRows(w, ds) {
+  if (S.zipPt) ds = [...ds].sort(byDist);
+  const all = S.weekAll.has(w), shown = all ? ds : ds.slice(0, 12);
+  return shown.map(dropRow).join('') + (ds.length > shown.length ? `<button class="more-btn" data-weekall="${w}">Show all ${ds.length} stores</button>` : '');
+}
+function viewAll() {
+  const t = terms(), filtering = t.length || S.type || S.collab;
+  const ok = p => matchP(p, t) && typeFilter(p) && collabFilter(p);
+  const hit = d => {
+    if (!near(d)) return false;
+    const flav = d.ids.some(id => ok(products[id]));
+    if (!t.length) return !filtering || flav;
+    const storeTxt = hits(d.hay, t);
+    return (S.type || S.collab) ? flav || (storeTxt && d.ids.some(id => typeFilter(products[id]) && collabFilter(products[id]))) : storeTxt || flav;
+  };
+  let h = filterBar('all');
+  const shown = weeks.map(w => [w, drops.filter(d => d.week === w && hit(d))]).filter(([, ds]) => ds.length);
+  const total = shown.reduce((n, [, ds]) => n + ds.length, 0);
+  h += `<div class="sec-title"><h2>All-time <span>· last 6 months</span></h2><small>${total} drop${total === 1 ? '' : 's'} · newest first</small></div>`;
+  if (!shown.length) return h + empty('No drops found', 'Try a strain (Palomita), a taste (papaya), a shop, or a city.');
+  h += shown.map(([w, ds], n) => {
+    const isOpen = S.weeks.has(w) || (filtering ? n < 3 : n === 0);
+    const nNew = (R.newFlavors[w] || []).length;
+    return `<details class="wkb" data-week="${w}"${isOpen ? ' open' : ''}><summary><h3>Week of <span>${fmt(w)}</span>${w === latest ? ' · this week' : ''}</h3>
+      <small>${ds.length} store${ds.length === 1 ? '' : 's'}${nNew ? ' · ' + nNew + ' new' : ''}</small>${caret}</summary>
+      <div class="rows">${weekRows(w, ds)}</div></details>`;
+  }).join('');
+  return h;
+}
+
+function viewSaved() {
+  const t = terms();
+  const list = live.filter(p => favs.has(favKey(p)) && matchP(p, t)).sort((a, b) => b.last.localeCompare(a.last));
+  let h = `<div class="sec-title"><h2>Your saved <span>strains</span></h2><small>Saved on this device</small></div>`;
+  h += list.length ? `<div class="grid">${list.map(flavorCard).join('')}</div>`
+    : empty('No saved strains yet', 'Tap the heart on any strain to save it here and see where it drops next.');
+  return h;
+}
+
+/* ---------- render ---------- */
+function render() {
+  document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === S.tab));
+  $('#favCount').textContent = favs.size ? favs.size : '';
+  $('#searchBox').classList.toggle('has', !!S.q);
+  const view = S.tab === 'week' && S.q ? viewAll : ({ week: viewWeek, flavors: viewFlavors, all: viewAll, saved: viewSaved }[S.tab] || viewWeek);
+  $('#view').innerHTML = view();
+  $('#fotw').innerHTML = S.q ? '' : weekPicksBlock();
+  const p = new URLSearchParams(); if (S.tab !== 'week') p.set('tab', S.tab); if (S.q) p.set('q', S.q);
+  const url = p.toString() ? '#' + p : location.pathname + location.search;
+  if (S.push) { history.pushState(null, '', url); S.push = false; } else history.replaceState(null, '', url);
+}
+window.addEventListener('popstate', () => {
+  const hp = new URLSearchParams(location.hash.slice(1));
+  S.tab = hp.get('tab') || 'week'; S.q = hp.get('q') || ''; qEl.value = S.q; render();
+});
+
+const qEl = $('#q'); qEl.value = S.q;
+if (innerWidth < 480) qEl.placeholder = 'Papaya, Palomita, San Diego...';
+let tmr; qEl.addEventListener('input', () => { clearTimeout(tmr); tmr = setTimeout(() => { S.q = qEl.value.trim(); S.limit = 40; render(); }, 120); });
+$('.search .clear').addEventListener('click', () => { qEl.value = ''; S.q = ''; render(); qEl.focus(); });
+$('.tabs').addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (!b) return; S.tab = b.dataset.tab; S.limit = 40; S.push = true; render(); window.scrollTo({ top: $('.controls').getBoundingClientRect().top + scrollY, behavior: 'smooth' }); });
+
+function onViewClick(e) {
+  const el = e.target.closest('button'); if (!el) return;
+  const ds = el.dataset;
+  if (ds.fav) { const p = products[ds.fav], k = favKey(p); favs.has(k) ? favs.delete(k) : favs.add(k); store.set('vuze-favs', [...favs]); render(); }
+  else if (ds.weekall) { S.weekAll.add(ds.weekall); render(); }
+  else if (ds.pick) { S.pick = ds.pick; render(); }
+  else if (ds.toggle) { const i = +ds.toggle; S.open.has(i) ? S.open.delete(i) : S.open.add(i); render(); }
+  else if (ds.all) { S['all' + ds.all] = true; render(); }
+  else if (ds.type) { S.type = S.type === ds.type ? '' : ds.type; render(); }
+  else if (ds.more !== undefined) { S.limit += 40; render(); }
+  else if (ds.try) { S.q = ds.try; qEl.value = S.q; render(); }
+  else if (ds.goto) {
+    const p = products[ds.goto];
+    S.tab = 'flavors'; S.q = p.name; qEl.value = p.name; S.type = ''; S.collab = ''; S.open.add(p.i); S.push = true; render();
+    const card = document.querySelector(`[data-p="${p.i}"]`); if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+$('#view').addEventListener('click', onViewClick);
+$('#fotw').addEventListener('click', onViewClick);
+$('#view').addEventListener('toggle', e => {
+  const el = e.target; if (!el.matches || !el.matches('details.wkb')) return;
+  const w = el.dataset.week;
+  if (el.open) S.weeks.add(w);
+  else S.weeks.delete(w);
+}, true);
+let ntmr;
+$('#view').addEventListener('input', e => {
+  if (e.target.id !== 'notesq') return;
+  clearTimeout(ntmr);
+  ntmr = setTimeout(() => {
+    S.tq = e.target.value; S.limit = 40; render();
+    const el = $('#notesq'); if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+  }, 150);
+});
+$('#view').addEventListener('change', e => {
+  const k = e.target.dataset.sel; if (!k) return;
+  S[k] = e.target.value; S.limit = 40;
+  render();
+});
+
+/* ---------- near me ---------- */
+const zipEl = $('#zip'), milesEl = $('#miles'), nearMsg = $('#nearMsg'), nearClear = $('#nearClear');
+function applyZip(z, save = true) {
+  z = (z || '').replace(/\D/g, '').slice(0, 5);
+  const pt = z.length === 5 ? GEO.zips[z] : null;
+  S.zip = pt ? z : ''; S.zipPt = pt || null; S.miles = +milesEl.value;
+  nearClear.hidden = !z;
+  nearMsg.hidden = !(z.length === 5);
+  nearMsg.textContent = pt ? `Showing drops within ${S.miles} miles of ${z}, closest first.` : (z.length === 5 ? 'That zip code is not in California.' : '');
+  if (save) { store.set('vuze-zip', S.zip); store.set('vuze-miles', S.miles); }
+}
+zipEl.value = store.get('vuze-zip', ''); milesEl.value = String(store.get('vuze-miles', 10));
+applyZip(zipEl.value, false);
+zipEl.addEventListener('input', () => { const before = S.zip; applyZip(zipEl.value); if (S.zip !== before || zipEl.value.length < 5) render(); });
+milesEl.addEventListener('change', () => { applyZip(zipEl.value); render(); });
+// "Use my location": find the closest California zip on the phone itself (nothing is sent anywhere)
+$('#locate').addEventListener('click', () => {
+  const btn = $('#locate'), say = t => { nearMsg.hidden = false; nearMsg.textContent = t; };
+  if (!navigator.geolocation) return say('Your browser cannot share location. Type your zip code instead.');
+  btn.disabled = true; btn.textContent = 'Finding you...';
+  navigator.geolocation.getCurrentPosition(pos => {
+    btn.disabled = false; btn.textContent = 'Use my location';
+    const me = [pos.coords.latitude, pos.coords.longitude];
+    let best = null, bd = Infinity;
+    for (const [z, pt] of Object.entries(GEO.zips)) { const d = miles(me, pt); if (d < bd) { bd = d; best = z; } }
+    if (!best || bd > 25) return say('You look to be outside California. Type a California zip code instead.');
+    zipEl.value = best; applyZip(best); render();
+  }, err => {
+    btn.disabled = false; btn.textContent = 'Use my location';
+    say(err.code === 1 ? 'Location is blocked. Allow it in your browser settings, or type your zip code.' : 'Could not find your location. Type your zip code instead.');
+  }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 });
+});
+nearClear.addEventListener('click', () => { zipEl.value = ''; applyZip(''); render(); zipEl.focus(); });
+
+
+render();
+
+/* Let a parent page (Squarespace) size the embed to fit. */
+if (window.parent !== window && 'ResizeObserver' in window) {
+  new ResizeObserver(() => parent.postMessage({ vuzeHeight: document.documentElement.scrollHeight }, '*')).observe(document.body);
+}
+})();
+</script>
+</body>
+</html>
