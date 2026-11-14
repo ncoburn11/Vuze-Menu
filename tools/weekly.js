@@ -9,6 +9,7 @@
 // --livemenu  A full-history clone of ncoburn11/live-menu (read-only). Default: ../live-menu
 // --notes     {"Strain|Collab": {"type": "...", "notes": "..."}} for flavors new to data.js.
 // --now       Pretend the run happens at this time (testing). Default: now.
+// --fotm      Strains of the Month override for this run's month: "Strain A|,Strain B|".
 // --dry       Print the report, change nothing.
 //
 // Rules: see CLAUDE.md and rules.json. New flavors come only from the live menu repo's history:
@@ -182,18 +183,38 @@ function addedOn(W) {
 const newNames = addedOn(newWeekend) || [];
 const newIds = newNames.map(n => { const [strain, collab = ''] = n.split('|'); return pid({ strain, collab: L.fixCollab(collab) }); });
 
-/* ---------- Flavors of the Week ---------- */
+/* ---------- Strains of the Month (rules.json fotm) ---------- */
+// Picked on the first run of a new month (by the Week-of date), then left alone for the month.
+// Pool: strains that dropped at a store in this week or the 3 weeks before. Ranking: rules.fotm.tiers in order
+// (Head Crack, peanut-buttery, gassy, exotic fruit, everything else). Ties inside a tier: the most interesting
+// tasting note wins; that is a judgment call, so the report lists the tied strains and --fotm "A|,B|" overrides.
 const storesThisWeek = id => drops.filter(d => d[4].includes(id)).length;
-const words = list => new RegExp('\\b(' + list.join('|') + ')', 'i');
-const FRUITY = words(rules.fotw.fruity), GASSY = words(rules.fotw.gassy);
+const MONTH = WEEK.slice(0, 7);
+const fotmPath = path.join(ROOT, 'flavors-of-the-month.js');
+const fotm = (() => { try { const s = fs.readFileSync(fotmPath, 'utf8'); return JSON.parse(s.slice(s.indexOf('{'), s.lastIndexOf('}') + 1)); } catch { return {}; } })();
+const TIERS = rules.fotm.tiers.map(t => ({ name: t.name, re: new RegExp(t.match, 'i'), on: t.on }));
 function tier(i) {
-  const [name, , , n] = R.products[i]; const txt = (n || '') + ' ' + name;
-  if (FRUITY.test(txt)) return 8;
-  if (GASSY.test(txt)) return 9;
-  return 10;
+  const [name, , , n] = R.products[i];
+  for (let k = 0; k < TIERS.length; k++) { const t = TIERS[k]; if (t.re.test(t.on === 'name' ? name : t.on === 'both' ? name + ' ' + (n || '') : (n || ''))) return k + 1; }
+  return TIERS.length + 1;
 }
-const fotw = [...newIds].sort((a, b) => tier(a) - tier(b) || storesThisWeek(b) - storesThisWeek(a) || R.products[a][0].localeCompare(R.products[b][0]))
-  .slice(0, rules.fotw.count);
+const tierName = k => (TIERS[k - 1] || { name: 'everything else' }).name;
+const recentFrom = addDays(WEEK, -21);
+const poolStores = new Map();
+for (const d of drops.concat(R.drops.filter(d => d[0] >= recentFrom && d[0] !== WEEK))) for (const id of d[4]) poolStores.set(id, (poolStores.get(id) || 0) + 1);
+const ranked = [...poolStores.keys()].sort((a, b) => tier(a) - tier(b) || poolStores.get(b) - poolStores.get(a) || R.products[a][0].localeCompare(R.products[b][0]));
+let fotmPicks = null, fotmNote = '';
+if (opt.fotm) {
+  fotmPicks = opt.fotm.split(',').map(x => x.trim()).filter(Boolean).map(x => x.includes('|') ? x : x + '|');
+  fotmNote = 'set by --fotm';
+} else if (!fotm[MONTH]) {
+  const top = ranked.slice(0, rules.fotm.count);
+  fotmPicks = top.map(i => `${R.products[i][0]}|${R.products[i][1]}`);
+  const edge = top.length ? tier(top[top.length - 1]) : 0;
+  const tied = ranked.filter(i => tier(i) === edge);
+  if (tied.length > top.filter(i => tier(i) === edge).length)
+    fotmNote = `TIE in "${tierName(edge)}": choose the most interesting tasting note among ${tied.map(i => `${R.products[i][0]} ("${R.products[i][3]}")`).join(', ')}; re-run with --fotm "A|,B|" if the pick should change`;
+}
 
 /* ---------- report ---------- */
 const pname = i => R.products[i][0] + (R.products[i][1] ? ' x ' + R.products[i][1] : '');
@@ -202,7 +223,8 @@ out.push(`# Release update: Week of ${WEEK}`, '');
 out.push(`- Orders window: ${since.toISOString()} to ${NOW.toISOString()}`);
 out.push(`- Stores published: ${drops.length} (from ${report.used.length} orders)`);
 out.push(`- New flavors (newly listed on the live menu Sunday ${newWeekend}): ${newIds.length ? newIds.map(pname).join(', ') : 'none logged'}`);
-out.push(`- Flavors of the Week: ${fotw.length ? fotw.map(i => `${pname(i)} (tier ${tier(i)}, ${storesThisWeek(i)} stores)`).join('; ') : 'none'}`);
+out.push(fotmPicks ? `- Strains of the Month (${MONTH}): ${fotmPicks.map(k => { const i = ranked.find(j => `${R.products[j][0]}|${R.products[j][1]}` === k); return i == null ? k.replace(/\|$/, '') : `${pname(i)} (${tierName(tier(i))}, ${poolStores.get(i)} store drops in 4 wks)`; }).join('; ')}${fotmNote ? ' (' + fotmNote + ')' : ''}`
+  : `- Strains of the Month (${MONTH}): unchanged (${(fotm[MONTH] || []).join(', ')}); next pick on the first run of next month`);
 out.push(`- New-flavor source: ${liveNote.join('; ')}`);
 const noNotes = [...new Set(newIds.concat(created))].filter(i => !R.products[i][3]);
 if (noNotes.length) out.push(`- NEED TASTING NOTES: ${noNotes.map(i => R.products[i][0] + '|' + R.products[i][1]).join(', ')}`);
@@ -223,12 +245,9 @@ for (const w of Object.keys(R.newFlavors)) if (w < CUTOFF) delete R.newFlavors[w
 R.updated = today;
 L.saveData(R);
 
-const fotmPath = path.join(ROOT, 'flavors-of-the-month.js');
-const fotm = (() => { try { const s = fs.readFileSync(fotmPath, 'utf8'); return JSON.parse(s.slice(s.indexOf('{'), s.lastIndexOf('}') + 1).replace(/^\s*\/\/.*$/mg, '').replace(/,\s*}/g, '}')); } catch { return {}; } })();
-if (fotw.length) fotm[WEEK] = fotw.map(i => `${R.products[i][0]}|${R.products[i][1]}`);
-for (const w of Object.keys(fotm)) if (w < CUTOFF) delete fotm[w];
-fs.writeFileSync(fotmPath, `// Flavors of the Week, logged each Sunday by tools/weekly.js (2 picks per week, see rules.json).
-// The page shows this week's picks as "Flavors of the Week" and the past 4 weeks as "Flavors of the Month".
+if (fotmPicks) fotm[MONTH] = fotmPicks;
+for (const m of Object.keys(fotm)) if (m < CUTOFF.slice(0, 7)) delete fotm[m];
+fs.writeFileSync(fotmPath, `// Strains of the Month, 2 picks per month, chosen on the first Sunday update of a new month (tools/weekly.js, rules.json fotm).
 window.FLAVORS_OF_THE_MONTH = ${JSON.stringify(Object.fromEntries(Object.entries(fotm).sort().reverse()), null, 2)};
 `);
 

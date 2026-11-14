@@ -35,7 +35,7 @@ The frame grows and shrinks to fit the page, so customers never see a second scr
 - **All-Time:** week-by-week drop history, newest first.
 - **Saved:** tap the heart on any strain to keep it on that phone.
 - **Near me:** type a zip or tap "Use my location" to sort shops by distance. Nothing is sent anywhere.
-- **Strains of the Week / Month:** two picks every week; the past 4 weeks of picks make the Month.
+- **Strains of the Month:** two picks, refreshed on the first update of each month (Head Crack, then peanut-buttery, gassy, exotic fruit).
 
 ## Weekly updates
 

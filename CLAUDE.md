@@ -31,10 +31,12 @@ It publishes the **Week of** the coming Monday.
   - The live menu history starts 10/26/2026, so the 11/1 additions are logged by hand in `tools/state.json` `menuLog` (used instead of the history for that Sunday).
   - The 15-day lag is copied from Flavorade. CONFIRM WITH THE OWNER before relying on it for VUZE.
   - Read the live menu repo only. Never edit it, and never copy anything from it to this site except flavor names.
-- **Strains of the Week:** 2 picks from that week's new strains.
-  - Priority: fruity notes > gassy notes > the rest (word lists in `rules.json` `fotw`). Ties go to the strain at the most stores. If there are only 1 or 2 new strains, they're all picked.
-  - Picks are logged in `flavors-of-the-month.js`. The page shows this week's picks as Strains of the Week and the past 4 weeks as Strains of the Month.
-  - If the owner names the picks, use those instead.
+- **Strains of the Month:** 2 picks per month. There are no Strains of the Week.
+  - Picked on the FIRST update of a new month (the Week-of date's month has no entry in `flavors-of-the-month.js`), then left alone for the rest of the month.
+  - Pool: strains that dropped at a store in the published week or the 3 weeks before.
+  - Priority (`rules.json` `fotm.tiers`): Head Crack > anything peanut-buttery tasting > anything gassy tasting > anything exotic-fruit tasting > the rest.
+  - If two strains are at odds in the same tier, pick the one with the MOST INTERESTING tasting note. The dry-run report prints "TIE in ..." with the tied strains and their notes: make that call, then run the real update with `--fotm "Strain A|,Strain B|"`.
+  - If the owner names the picks, use those (`--fotm`).
 - **Deals:** from sheet `1U-1GkqFKb92WSr2AtFflDz_FgCciIZjsHdaUt7uPVE4`, tab "Current - 2026".
   - Use only rows where Brands includes VUZE and Confirmed? is TRUE.
   - A store-specific row beats a chain-wide row.
@@ -68,7 +70,7 @@ It publishes the **Week of** the coming Monday.
    - Commit `data.js`, `geo.js`, `stores.json`, `tools/seed/notes.txt`, `rules.json`, `flavors-of-the-month.js`, `tools/state.json` and `tools/last-report.md`, then push to `main`.
    - Never run it twice for the same Sunday without `--dry`. `lastCutoff` moves forward on every real run.
 7. **Summary for the owner** (it goes out by push notification and email):
-   - The week, number of stores, new strains and Strains of the Week.
+   - The week, number of stores, new strains, and Strains of the Month (say whether they were re-picked this run).
    - **Any NEW C11 licenses for review.**
    - Anything held back.
    - New stores you named.

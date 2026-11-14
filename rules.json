@@ -176,50 +176,30 @@
     "C11-0001235-LIC": "Green Rocket Design and Technology",
     "C11-0001847-LIC": "Bishop Boyz"
   },
-  "fotw": {
+  "fotm": {
+    "_doc": "Strains of the Month: 2 picks, chosen on the first update of each month from strains that dropped in the last 4 weeks. Tiers in order; 'on' = name, notes or both. Ties in a tier: the most interesting tasting note (Claude's call, see CLAUDE.md).",
     "count": 2,
-    "_doc": "VUZE picks: fruity notes first, then gassy, then the rest; ties go to the flavor at the most stores.",
-    "fruity": [
-      "fruit",
-      "berry",
-      "cherry",
-      "grape",
-      "mango",
-      "peach",
-      "lemon",
-      "lime",
-      "orange",
-      "citrus",
-      "melon",
-      "pineapple",
-      "apple",
-      "tropical",
-      "punch",
-      "candy",
-      "juice",
-      "tangie",
-      "papaya",
-      "guava",
-      "plum",
-      "apricot",
-      "kiwi",
-      "mint"
-    ],
-    "gassy": [
-      "gas",
-      "fuel",
-      "diesel",
-      "chem",
-      "og",
-      "skunk",
-      "kush",
-      "petrol",
-      "garlic",
-      "onion",
-      "funk",
-      "onion",
-      "rubber",
-      "mushroom"
+    "tiers": [
+      {
+        "name": "Head Crack",
+        "on": "name",
+        "match": "^head crack$"
+      },
+      {
+        "name": "peanut buttery",
+        "on": "both",
+        "match": "peanut|\\bpb\\b|pb ?& ?j|jiffy|nutter ?butter|cookie butter|almond butter|uncrustable"
+      },
+      {
+        "name": "gassy",
+        "on": "notes",
+        "match": "\\b(gas|gasoline|fuel|diesel|petrol|burnout|burnt rubber|rubber|skunk|chem|exhaust|asphalt)\\b"
+      },
+      {
+        "name": "exotic fruit",
+        "on": "notes",
+        "match": "papaya|mango|guava|kiwi|passion ?fruit|lychee|dragon ?fruit|tropical|pineapple|a[c\u00e7]a[i\u00ed]|yuzu|coconut|tamarind|starfruit|hawaiian|hi-?chew|dragonfruit"
+      }
     ]
   }
 }

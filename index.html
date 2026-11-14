@@ -13,7 +13,7 @@
 :root{
   --bg:#071d26; --bg-2:#04131b; --bg-3:#030b10; --bar:#0c1a1e; --card-a:rgba(18,47,64,.65); --card-b:rgba(5,19,28,.9);
   --edge:#2d3a46; --cyan:#55cbea; --cyan-d:#2ea9cc; --glow:rgba(85,203,234,.35); --ink:#fff; --soft:#a9c4cf; --dim:#6f8b97;
-  --line:rgba(85,203,234,.16); --ind:#a58bff; --sat:#ffc861; --volt:#f4ff3a; --volt-glow:rgba(244,255,58,.55);
+  --line:rgba(85,203,234,.16); --ind:#a58bff; --sat:#ff9d5c; --volt:#ffe02e; --volt-glow:rgba(255,224,46,.5);
   --head:Jost,Futura,"Trebuchet MS","Helvetica Neue",Arial,sans-serif;
   --body:"Proxima Nova",Figtree,"Helvetica Neue",Helvetica,Arial,sans-serif;
   color-scheme:dark;
@@ -34,7 +34,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 /* hero: framed like a camera viewfinder */
 .hero{padding:30px 0 10px}
 .vf{position:relative;text-align:center;padding:30px 18px 26px;margin:0 auto;max-width:760px}
-.vf .c{position:absolute;width:30px;height:30px;border:0 solid var(--cyan);filter:drop-shadow(0 0 6px var(--glow))}
+.vf .c{position:absolute;width:30px;height:30px;border:0 solid var(--volt);filter:drop-shadow(0 0 7px var(--volt-glow))}
 .vf .c1{top:0;left:0;border-top-width:3px;border-left-width:3px}
 .vf .c2{top:0;right:0;border-top-width:3px;border-right-width:3px}
 .vf .c3{bottom:0;left:0;border-bottom-width:3px;border-left-width:3px}
@@ -47,13 +47,11 @@ button{font:inherit;color:inherit;cursor:pointer}
 .eyebrow{font:600 12px/1.2 var(--head);letter-spacing:.32em;color:var(--cyan);margin:0;text-transform:uppercase}
 .hero h1{font:800 clamp(40px,10.5vw,76px)/.95 var(--head);letter-spacing:.06em;text-transform:uppercase;margin:12px 0 0}
 .hero h1 em{font-style:normal;color:var(--cyan);text-shadow:0 0 22px var(--glow)}
-.bolt{display:inline-block;width:.42em;height:.62em;margin-left:.08em;vertical-align:.02em;color:var(--volt);filter:drop-shadow(0 0 8px var(--volt-glow));animation:zap 4.5s infinite}
-@keyframes zap{0%,86%,90%,94%,100%{opacity:1}88%,92%{opacity:.25}}
 .hero p.tag{margin:12px auto 0;max-width:30em;font:500 17px/1.4 var(--body);color:var(--soft)}
 .hero p.warn{margin:14px auto 0;display:inline-block;font:700 12px/1.4 var(--head);letter-spacing:.14em;text-transform:uppercase;color:#fff;border:1px solid var(--edge);border-radius:999px;padding:7px 14px;background:rgba(0,0,0,.25)}
 .hero p.warn span{color:var(--cyan)}
-#updated{display:block;margin-top:10px;font:600 13px/1.3 var(--body);color:var(--dim)}
-@media (prefers-reduced-motion:reduce){.ticker .track,.rec b,.bolt{animation:none}}
+#updated{display:block;margin-top:10px;font:700 12px/1.3 var(--head);letter-spacing:.18em;text-transform:uppercase;color:var(--volt)}
+@media (prefers-reduced-motion:reduce){.ticker .track,.rec b{animation:none}}
 /* search + near me */
 .searchwrap{padding-top:10px;padding-bottom:4px}
 .search{position:relative;display:block}
@@ -76,11 +74,11 @@ button{font:inherit;color:inherit;cursor:pointer}
 /* Flavors of the Week / Month */
 #fotw:empty{display:none}
 .picks{position:relative;margin:18px 0 6px;padding:16px;border:1px solid var(--edge);border-radius:10px;background:radial-gradient(ellipse at 100% 0,rgba(85,203,234,.14),rgba(0,0,0,0) 60%),linear-gradient(160deg,var(--card-a),var(--card-b))}
-.picks:before{content:"";position:absolute;inset:-1px;border-radius:10px;padding:1px;background:linear-gradient(120deg,var(--volt),var(--cyan) 12%,transparent 35%,transparent 65%,var(--cyan));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.picks:before{content:"";position:absolute;inset:-1px;border-radius:10px;padding:1px;background:linear-gradient(120deg,var(--volt),transparent 30%,transparent 70%,var(--cyan));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
 .seg{display:inline-flex;gap:0;border:1px solid var(--edge);border-radius:8px;padding:3px;background:rgba(0,0,0,.35);margin-bottom:4px}
 .seg button{border:0;background:none;border-radius:6px;padding:9px 14px;font:700 11.5px/1 var(--head);letter-spacing:.16em;text-transform:uppercase;color:var(--soft)}
-.seg button[aria-selected=true]{background:var(--cyan);color:#03141c;box-shadow:0 0 16px var(--glow)}
-.picks .sec-title{margin-top:14px}
+.seg button[aria-selected=true]{background:var(--volt);color:#1a1600;box-shadow:0 0 16px var(--volt-glow)}
+.picks .sec-title{margin-top:2px}
 .picks .grid{display:grid;gap:10px;align-items:start}
 @media(min-width:640px){.picks .grid{grid-template-columns:1fr 1fr}}
 .picks .grid>*:only-child{grid-column:1/-1}
@@ -117,7 +115,7 @@ main{padding-bottom:50px}
 .sec-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:28px 0 12px}
 .sec-title h2{font:800 clamp(19px,4.6vw,25px)/1.15 var(--head);letter-spacing:.1em;text-transform:uppercase;margin:0}
 .sec-title h2 span{color:var(--cyan)}
-.sec-title small{color:var(--dim);font:600 12px/1.3 var(--head);letter-spacing:.12em;text-transform:uppercase;text-align:right}
+.sec-title small{color:var(--volt);font:600 12px/1.3 var(--head);letter-spacing:.12em;text-transform:uppercase;text-align:right}
 .grid{display:grid;gap:10px;align-items:start}
 @media(min-width:640px){.grid.two{grid-template-columns:1fr 1fr}}
 /* strain card (same look as "Latest Releases" on the homepage) */
@@ -146,19 +144,19 @@ main{padding-bottom:50px}
 .loc{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:15px}
 .loc:last-child{border-bottom:0}
 .loc .city{color:var(--soft);font-size:13px}
-.loc .deal{flex:none;max-width:48%;text-align:right;font-size:12.5px;font-weight:700;color:var(--cyan)}
+.loc .deal{flex:none;max-width:48%;text-align:right;font-size:12.5px;font-weight:700;color:var(--volt)}
 .toggle-more{border:0;background:none;color:var(--cyan);font:700 12px var(--head);letter-spacing:.16em;padding:10px 0 0;text-transform:uppercase}
 .caret{flex:none;color:var(--soft);transition:transform .2s;margin-top:2px}
 .card.open .caret{transform:rotate(180deg)}
 .viewstores{display:block;width:calc(100% - 32px);margin:0 16px 15px;border:1px solid #fff;background:transparent;color:#fff;border-radius:6px;padding:10px;font:700 11.5px/1 var(--head);letter-spacing:.2em;text-transform:uppercase}
-.viewstores:hover{border-color:var(--cyan);color:var(--cyan)}
+.viewstores:hover{border-color:var(--volt);color:var(--volt)}
 /* store card */
 .st{padding:15px 16px}
 .st-top,.drow-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .st-name{font:700 17px/1.2 var(--head);letter-spacing:.05em}
 .st-city{font-size:13px;color:var(--soft)}
 .st-date{flex:none;font:700 10.5px/1 var(--head);letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);border:1px solid rgba(85,203,234,.45);border-radius:4px;padding:5px 8px}
-.deal-b{display:inline-block;margin-top:9px;font-size:13px;font-weight:700;color:#03141c;background:var(--cyan);border-radius:4px;padding:4px 9px}
+.deal-b{display:inline-block;margin-top:9px;font-size:13px;font-weight:700;color:#1a1600;background:var(--volt);border-radius:4px;padding:4px 9px;box-shadow:0 0 14px rgba(255,224,46,.18)}
 .flist{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
 .flist button{border:1px solid var(--edge);background:rgba(0,0,0,.3);border-radius:4px;padding:6px 11px;font:600 12.5px/1.2 var(--head);letter-spacing:.08em;text-transform:uppercase;color:#fff}
 .flist button:hover{border-color:var(--cyan)}
@@ -166,7 +164,7 @@ main{padding-bottom:50px}
 .flist button.isnew:after{content:" NEW";font:800 9.5px var(--head);letter-spacing:.14em;color:var(--volt)}
 .st-hist{margin-top:10px;font-size:13px;color:var(--dim)}
 .wkb{border:1px solid var(--edge);border-radius:8px;margin:0 0 12px;background:linear-gradient(160deg,var(--card-a),var(--card-b));overflow:hidden}
-.wkb[open]{border-color:rgba(85,203,234,.5)}
+.wkb[open]{border-color:rgba(85,203,234,.5);box-shadow:inset 3px 0 0 var(--volt)}
 .wkb>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:15px 16px}
 .wkb>summary::-webkit-details-marker{display:none}
 .wkb>summary h3{margin:0;font:800 15px/1.2 var(--head);letter-spacing:.14em;text-transform:uppercase}
@@ -182,7 +180,7 @@ main{padding-bottom:50px}
 .empty{text-align:center;color:var(--soft);padding:40px 10px}
 .empty b{display:block;color:#fff;font:800 17px var(--head);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
 .more-btn{display:flex;align-items:center;gap:8px;margin:18px auto 0;border:1px solid #fff;background:transparent;color:#fff;font:700 12.5px var(--head);letter-spacing:.2em;text-transform:uppercase;border-radius:6px;padding:13px 24px}
-.more-btn:hover{background:var(--cyan);border-color:var(--cyan);color:#03141c}
+.more-btn:hover{background:var(--volt);border-color:var(--volt);color:#1a1600}
 .hint{font-size:13px;color:var(--soft);margin:12px 0 0}
 .hint button{border:1px solid var(--edge);background:rgba(0,0,0,.25);border-radius:4px;padding:4px 10px;margin:2px;font:600 12px var(--head);letter-spacing:.08em;color:#fff}
 .hint button:hover{border-color:var(--cyan)}
@@ -212,7 +210,7 @@ mark{background:none;color:var(--cyan);text-decoration:underline;text-decoration
       <span class="rec" aria-hidden="true"><b></b>LIVE</span><span class="wk-tag" id="wkTag" aria-hidden="true"></span>
       <img class="eye" src="https://images.squarespace-cdn.com/content/v1/66b4f18e93a33a272c7e846d/3bc37e54-4df3-4cb0-9cde-a09bab689c1d/VUZE+Eye+logo.png?format=300w" alt="VUZE">
       <p class="eyebrow">Fresh drops &middot; Live resin</p>
-      <h1>The <em>Viewfinder.</em><svg class="bolt" viewBox="0 0 14 22" aria-hidden="true"><path d="M9 0 0 13h5.5L4 22l10-14H8.2z" fill="currentColor"/></svg></h1>
+      <h1>The <em>Viewfinder.</em></h1>
       <p class="tag">Wanna go sightseeing &amp; find the best VUZE? Search any strain, tasting note, or shop.</p>
       <p class="warn">Strains sell out fast. <span>Call the shop before you roll.</span></p>
       <span id="updated"></span>
@@ -310,14 +308,13 @@ drops.forEach(d => {
 const stores = [...storeMap.values()].map(s => (s.drops.sort((a, b) => b.week.localeCompare(a.week)), s.latest = s.drops[0], s))
   .sort((a, b) => b.latest.week.localeCompare(a.latest.week) || a.shop.localeCompare(b.shop));
 const live = products.filter(p => p.drops.length || (p.firstNew && p.firstNew >= CUTOFF));
-const FOUR_WK = weeks[Math.min(3, weeks.length - 1)];
-// Flavors of the Month: logged week by week in flavors-of-the-month.js; show the past 4 weeks of picks.
+// Strains of the Month: 2 picks per month, logged in flavors-of-the-month.js as { "YYYY-MM": ["Strain|", ...] }.
 const FOTM = window.FLAVORS_OF_THE_MONTH || {};
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const findP = x => { const [name, collab] = String(x).split('|').map(s => s.trim());
   return live.filter(p => norm(p.name) === norm(name) && (!collab || norm(p.collab) === norm(collab))).sort((a, b) => b.last.localeCompare(a.last))[0]; };
-const picks = [...new Set(Object.keys(FOTM).filter(w => w >= FOUR_WK).sort().reverse()
-  .flatMap(w => FOTM[w].map(findP)).filter(Boolean))];
-const weekPicks = [...new Set((FOTM[latest] || []).map(findP).filter(Boolean))];
+const pickMonth = Object.keys(FOTM).filter(m => /^\d{4}-\d{2}$/.test(m) && m <= (latest || '').slice(0, 7)).sort().pop() || '';
+const picks = [...new Set((FOTM[pickMonth] || []).map(findP).filter(Boolean))];
 const collabs = [...new Set(live.map(p => p.collab || 'Flavorade'))].sort((a, b) => a === 'Flavorade' ? -1 : b === 'Flavorade' ? 1 : a.localeCompare(b));
 
 $('#updated').textContent = 'Updated for the week of ' + fmt(latest);
@@ -500,33 +497,11 @@ function viewFlavors() {
   return h;
 }
 
-// Same priority rule as the Sunday Flavors of the Week picks (rules.json / tools/weekly.js): fruity, then gassy.
-const FRUITY = new RegExp('\\b(' + ["fruit", "berry", "cherry", "grape", "mango", "peach", "lemon", "lime", "orange", "citrus", "melon", "pineapple", "apple", "tropical", "punch", "candy", "juice", "tangie", "papaya", "guava", "plum", "apricot", "kiwi", "mint"].join('|') + ')', 'i');
-const GASSY = new RegExp('\\b(' + ["gas", "fuel", "diesel", "chem", "og", "skunk", "kush", "petrol", "garlic", "onion", "funk", "rubber", "mushroom"].join('|') + ')', 'i');
-function fotwTier(p) {
-  const tx = (p.notes || '') + ' ' + p.name;
-  if (FRUITY.test(tx)) return 8;
-  if (GASSY.test(tx)) return 9;
-  return 10;
-}
-function fotmContent() {
-  const ws = Object.keys(FOTM).filter(w => w >= FOUR_WK).sort().reverse();
-  let h = `<div class="sec-title"><h2>Strains of <span>the Month</span></h2><small>Past 4 weeks</small></div>`;
-  const picked = new Map(); // product -> newest week it was picked
-  ws.forEach(w => FOTM[w].map(findP).filter(Boolean).forEach(p => { if (!picked.has(p)) picked.set(p, w); }));
-  if (!picked.size) return h + empty('No picks yet', 'Strains of the Week are added every Sunday.');
-  const list = [...picked.keys()].sort((a, b) => fotwTier(a) - fotwTier(b) || b.recentStores - a.recentStores || a.name.localeCompare(b.name));
-  return h + `<div class="grid">${list.map(p => `<div><div class="fotm-wk">Picked week of ${fmt(picked.get(p))}</div>${flavorCard(p, { compact: true })}</div>`).join('')}</div>`;
-}
-function weekPicksBlock() {
-  if (!weekPicks.length && !picks.length) return '';
-  const month = S.pick === 'month';
-  const main = month ? fotmContent()
-    : `<div class="sec-title"><h2>Strains of <span>the Week</span></h2><small>Week of ${fmt(latest)}</small></div><div class="grid">${weekPicks.map(p => flavorCard(p, { compact: true })).join('')}</div>`;
-  return `<section class="picks"><div class="seg" role="tablist">
-      <button role="tab" data-pick="week" aria-selected="${!month}">Of the Week</button>
-      <button role="tab" data-pick="month" aria-selected="${month}">Of the Month</button>
-    </div>${main}</section>`;
+function picksBlock() {
+  if (!picks.length) return '';
+  const [y, m] = pickMonth.split('-');
+  return `<section class="picks"><div class="sec-title"><h2>Strains of <span>the Month</span></h2><small>${MONTH_NAMES[+m - 1]} ${y}</small></div>
+    <div class="grid">${picks.map(p => flavorCard(p, { compact: true })).join('')}</div></section>`;
 }
 
 function dropRow(d) {
@@ -583,7 +558,7 @@ function render() {
   $('#searchBox').classList.toggle('has', !!S.q);
   const view = S.tab === 'week' && S.q ? viewAll : ({ week: viewWeek, flavors: viewFlavors, all: viewAll, saved: viewSaved }[S.tab] || viewWeek);
   $('#view').innerHTML = view();
-  $('#fotw').innerHTML = S.q ? '' : weekPicksBlock();
+  $('#fotw').innerHTML = S.q ? '' : picksBlock();
   const p = new URLSearchParams(); if (S.tab !== 'week') p.set('tab', S.tab); if (S.q) p.set('q', S.q);
   const url = p.toString() ? '#' + p : location.pathname + location.search;
   if (S.push) { history.pushState(null, '', url); S.push = false; } else history.replaceState(null, '', url);
@@ -604,7 +579,6 @@ function onViewClick(e) {
   const ds = el.dataset;
   if (ds.fav) { const p = products[ds.fav], k = favKey(p); favs.has(k) ? favs.delete(k) : favs.add(k); store.set('vuze-favs', [...favs]); render(); }
   else if (ds.weekall) { S.weekAll.add(ds.weekall); render(); }
-  else if (ds.pick) { S.pick = ds.pick; render(); }
   else if (ds.toggle) { const i = +ds.toggle; S.open.has(i) ? S.open.delete(i) : S.open.add(i); render(); }
   else if (ds.all) { S['all' + ds.all] = true; render(); }
   else if (ds.type) { S.type = S.type === ds.type ? '' : ds.type; render(); }
