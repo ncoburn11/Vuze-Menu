@@ -1,14 +1,11 @@
 # Release update: Week of 2026-11-16
 
 - Orders window: 2026-11-09T08:00:00.000Z to 2026-11-14T19:53:26.635Z
-- Stores published: 27 (from 27 orders)
+- Stores published: 28 (from 28 orders)
 - New flavors (newly listed on the live menu Sunday 2026-11-01): Red Ringz, Satsuma Sherbert
 - Strains of the Month (2026-11): unchanged (PB&J|, Mendo Breath|); next pick on the first run of next month
 - New-flavor source: Sunday 2026-11-01: owner-provided list
-- Deals updated on 294 store rows
-
-## Held back (needs a decision)
-- PO 51846: PMG comment not recognized: "*MARCH AND ASH CHULA VISTA TELEGRAPH*"
+- Deals updated on 14 store rows
 
 ## Drops
 - Sundial Collective | Redding: Satsuma Sherbert, Mochalope, Apricot Mintz, Uncrustablez
@@ -24,6 +21,7 @@
 - OTC | Manteca (25% OFF Fridays, Saturdays, & Sundays): Government Tangie, Hindu Kush
 - OTC | Stockton (25% OFF Fridays, Saturdays, & Sundays): Satsuma Sherbert, Red Ringz
 - Mainstage | Sacramento: Satsuma Sherbert, Red Ringz, Palomita, Mochalope, Government Tangie
+- Puff-N-Dash | Chula Vista Telegraph: Head Crack, Red Ringz, Satsuma Sherbert, Yo Melon
 - Club W | Modesto: Head Crack, Red Ringz, Satsuma Sherbert, Yo Melon
 - X1 | Tracy: Yo Melon, Satsuma Sherbert, Red Ringz, Head Crack, Palomita, Mochalope
 - Toasty | Sacramento: Yo Melon, Satsuma Sherbert, Red Ringz, Head Crack

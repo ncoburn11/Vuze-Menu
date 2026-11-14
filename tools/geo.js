@@ -8,7 +8,7 @@ const L = require('./lib');
 const ROOT = L.ROOT;
 const ZIPS = JSON.parse(fs.readFileSync(path.join(__dirname, 'ca-zips.json'), 'utf8'));
 const CITY_ALIAS = {
-  'chula vista broadway': 'chula vista', 'chula vista h st': 'chula vista', 'city heights': 'san diego', 'mission valley': 'san diego',
+  'chula vista broadway': 'chula vista', 'chula vista h st': 'chula vista', 'chula vista telegraph': 'chula vista', 'city heights': 'san diego', 'mission valley': 'san diego',
   'sabre springs': 'san diego', 'pacific beach': 'san diego', 'eagle rock': 'los angeles', 'westwood': 'los angeles', 'hollywood': 'los angeles',
   'west hollywood': 'west hollywood', 'south bay': 'torrance', 'bel air': 'los angeles', 'sf': 'san francisco', 'la': 'los angeles', 'sac': 'sacramento',
   'imperial valley': 'el centro', 'st marysville': 'marysville', 'calif city': 'california city', 'mammoth lake': 'mammoth lakes', 'lb': 'long beach',
