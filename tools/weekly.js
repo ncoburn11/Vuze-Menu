@@ -261,6 +261,7 @@ if (opt.dry) process.exit(0);
 /* ---------- write ---------- */
 const CUTOFF = addDays(WEEK, -182);
 R.drops = drops.concat(R.drops.filter(d => d[0] !== WEEK)).filter(d => d[0] >= CUTOFF);
+for (const d of R.drops) d[3] = L.cleanDeal(d[3]); // never mention Flavorade on the VUZE site
 if (newIds.length) R.newFlavors[WEEK] = newIds; else delete R.newFlavors[WEEK];
 for (const w of Object.keys(R.newFlavors)) if (w < CUTOFF) delete R.newFlavors[w];
 R.updated = today;

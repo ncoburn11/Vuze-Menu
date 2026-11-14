@@ -315,7 +315,7 @@ const findP = x => { const [name, collab] = String(x).split('|').map(s => s.trim
   return live.filter(p => norm(p.name) === norm(name) && (!collab || norm(p.collab) === norm(collab))).sort((a, b) => b.last.localeCompare(a.last))[0]; };
 const pickMonth = Object.keys(FOTM).filter(m => /^\d{4}-\d{2}$/.test(m) && m <= (latest || '').slice(0, 7)).sort().pop() || '';
 const picks = [...new Set((FOTM[pickMonth] || []).map(findP).filter(Boolean))];
-const collabs = [...new Set(live.map(p => p.collab || 'Flavorade'))].sort((a, b) => a === 'Flavorade' ? -1 : b === 'Flavorade' ? 1 : a.localeCompare(b));
+const collabs = [...new Set(live.map(p => p.collab || 'VUZE'))].sort();
 
 $('#updated').textContent = 'Updated for the week of ' + fmt(latest);
 $('#wkTag').textContent = 'WK ' + fmt(latest).toUpperCase();
@@ -350,7 +350,7 @@ const typeFilter = p => {
   if (S.type === 'Sativa') return /^Sativa/.test(p.type);
   return /Hybrid/.test(p.type);
 };
-const collabFilter = p => !S.collab || (p.collab || 'Flavorade') === S.collab;
+const collabFilter = p => !S.collab || (p.collab || 'VUZE') === S.collab;
 const cityFilter = d => !S.city || d.city === S.city;
 // Near me: distance from the shopper's zip to each store (stores without one location, like All Stiiizy Shops, are left out).
 const GEO = window.GEO || { stores: {}, zips: {} };

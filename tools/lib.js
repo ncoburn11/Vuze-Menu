@@ -101,8 +101,24 @@ function dealFinder(sheet) {
     const pick = spec.find(loc)
       || (spec.length === 1 && rowsD.filter(x => rk(x) === rk(spec[0])).length === 1 ? spec[0] : null)
       || cand.find(isChain);
-    return pick ? String(pick[4]).replace(/\s+/g, ' ').trim() : '';
+    return pick ? cleanDeal(String(pick[4]).replace(/\s+/g, ' ').trim()) : '';
   };
 }
 
-module.exports = { dealFinder, ROOT, norm, fixCollab, parseProduct, caDate, releaseWeek, cityFromAddress, readOrders, groupDeliveries, loadData, saveData };
+// VUZE site rule: a deal never mentions Flavorade. Parts about Flavorade only are dropped;
+// shared deals keep the VUZE side ("40% off Flavorade and VUZE Wednesdays" -> "40% off VUZE Wednesdays").
+function cleanDeal(deal) {
+  const FL = /\bflav(orade)?\b/i, VZ = /\bvuze\b/i;
+  const parts = String(deal || '').split(/\s+\/\s+|\s*;\s*/).map(part => {
+    if (!FL.test(part)) return part;
+    if (!VZ.test(part)) return '';                                              // Flavorade-only
+    return part
+      .replace(/\bflav(?:orade)?\s+(mon|tues|wednes|thurs|fri|satur|sun)days?\s*(?:\+|&|and)\s*vuze\b/ig, (m, d) => d[0].toUpperCase() + d.slice(1) + 'days')
+      .replace(/\bflav(?:orade)?\s*(?:\+|&|and)\s*/ig, '')
+      .replace(/\s*(?:\+|&|and)\s*flav(?:orade)?\b/ig, '')
+      .replace(/\s{2,}/g, ' ').trim();
+  }).filter(x => x && !FL.test(x));
+  return parts.join(' / ');
+}
+
+module.exports = { cleanDeal, dealFinder, ROOT, norm, fixCollab, parseProduct, caDate, releaseWeek, cityFromAddress, readOrders, groupDeliveries, loadData, saveData };

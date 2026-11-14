@@ -65,7 +65,7 @@ for (const l of lines.slice(lines.findIndex(x => x.startsWith('Week of')))) {
   if (l.includes('|')) {
     const [shop, rest] = [l.slice(0, l.indexOf('|')).trim(), l.slice(l.indexOf('|') + 1).trim()];
     const m = rest.match(/^(.*?)\s+-\s+(.*)$/);
-    cur.drops.push({ shop, city: m ? m[1] : rest, deal: m ? m[2] : '', f: [] }); mode = 'drop'; continue;
+    cur.drops.push({ shop, city: m ? m[1] : rest, deal: L.cleanDeal(m ? m[2] : ''), f: [] }); mode = 'drop'; continue;
   }
   throw new Error('line not understood: ' + l);
 }

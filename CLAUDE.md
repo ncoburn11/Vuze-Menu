@@ -42,6 +42,7 @@ It publishes the **Week of** the coming Monday.
 - **Deals:** from sheet `1U-1GkqFKb92WSr2AtFflDz_FgCciIZjsHdaUt7uPVE4`, tab "Current - 2026".
   - Use only rows where Brands includes VUZE and Confirmed? is TRUE.
   - A store-specific row beats a chain-wide row.
+  - **Never mention Flavorade in a deal on this site.** `L.cleanDeal` (tools/lib.js) drops Flavorade-only deals and keeps the VUZE side of shared ones; check the report's deals for any leftover "Flav".
 - **Only 6 months of weeks are kept.** Older weeks are deleted on every run.
 
 ## Steps
