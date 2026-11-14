@@ -109,7 +109,7 @@ function dealFinder(sheet) {
 // shared deals keep the VUZE side ("40% off Flavorade and VUZE Wednesdays" -> "40% off VUZE Wednesdays").
 function cleanDeal(deal) {
   const FL = /\bflav(orade)?\b/i, VZ = /\bvuze\b/i;
-  const parts = String(deal || '').split(/\s+\/\s+|\s*;\s*/).map(part => {
+  const parts = String(deal || '').split(/\s+\/+\s+|\s*;\s*/).map(part => {
     if (!FL.test(part)) return part;
     if (!VZ.test(part)) return '';                                              // Flavorade-only
     return part
