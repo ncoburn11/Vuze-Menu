@@ -12,7 +12,9 @@ It publishes the **Week of** the coming Monday.
 - **Orders:** every GrowFlow order on license `C11-0001795-LIC` (region `ca`) counts.
   - It must be in stage CLOSED or IN_TRANSFER.
   - It must be of type RETAIL, DISTRIBUTOR or MICRO_BUSINESS.
-  - Its effective date must be after the last run (`tools/state.json` `lastCutoff`) and up to now. Normally that is Monday to Sunday evening; orders transferred on Sunday after the run roll into the next week.
+  - Its effective date must be after the last run (`tools/state.json` `lastCutoff`) and up to now. Normally that is Monday to Sunday evening.
+  - The Week-of is always the coming Monday (a run on Sunday or any day before it publishes that Monday's week). Orders after the LAST run of a week roll into the next week.
+  - **Re-runs merge.** A second real run for a Week-of that is already published (for example Saturday, then Sunday) re-reads that whole week from where its first run started and adds anything new to the SAME week. It never removes a store or strain already on the week (the report says "RE-RUN ... Added: ..." and lists anything kept). `tools/state.json` `weeks` records each week's start and orders.
 - **Effective date:** the transfer date. If the order's comment or notes give a later date (within 30 days), use that date instead. For example, SGI "Monday 11/16".
 - **Only VUZE live resin cart lines count** (`VUZE | Strain | Live Resin Vape Cart | 1g`, either order): no samples, Flavorade, Sirius, Casual, batteries or kits.
 - **C11 distributors are never shown, except these five:**
@@ -68,7 +70,7 @@ It publishes the **Week of** the coming Monday.
      - Add each one to `tools/seed/notes.txt` (`Strain | Type | Notes`); weekly.js reads it on every run. If there's truly no note, publish without one and say so.
 6. **Real run:** run the same command without `--dry`, adding `--notes notes.json`.
    - Commit `data.js`, `geo.js`, `stores.json`, `tools/seed/notes.txt`, `rules.json`, `flavors-of-the-month.js`, `tools/state.json` and `tools/last-report.md`, then push to `main`.
-   - Never run it twice for the same Sunday without `--dry`. `lastCutoff` moves forward on every real run.
+   - Running it again for the same week is safe: it merges into that week (see Re-runs merge). Still do the dry run first.
 7. **Summary for the owner** (it goes out by push notification and email):
    - The week, number of stores, new strains, and Strains of the Month (say whether they were re-picked this run).
    - **Any NEW C11 licenses for review.**

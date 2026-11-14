@@ -1,9 +1,10 @@
 # Release update: Week of 2026-11-16
 
 - Orders window: 2026-11-09T08:00:00.000Z to 2026-11-14T19:53:26.635Z
+- RE-RUN of Week of 2026-11-16 (already published): merged into the same week. Added: nothing new
 - Stores published: 28 (from 28 orders)
 - New flavors (newly listed on the live menu Sunday 2026-11-01): Red Ringz, Satsuma Sherbert
-- Strains of the Month (2026-11): unchanged (PB&J|, Mendo Breath|); next pick on the first run of next month
+- Strains of the Month (2026-11): Head Crack (Head Crack, 12 store drops in 4 wks); Uncrustablez (peanut buttery, 21 store drops in 4 wks)
 - New-flavor source: Sunday 2026-11-01: owner-provided list
 - Deals updated on 14 store rows
 

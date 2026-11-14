@@ -49,7 +49,12 @@ const today = L.caDate(NOW);
 const dow = new Date(today + 'T12:00:00Z').getUTCDay(); // 0 = Sunday
 const WEEK = addDays(today, dow === 0 ? 1 : 8 - dow);     // the coming Monday
 const SUNDAY = addDays(WEEK, -1);                          // this run's Sunday
-const since = new Date(state.lastCutoff);
+// A week can be run more than once (e.g. Saturday, then Sunday). Every run that publishes the same Week-of
+// re-reads that week's whole window, from where its FIRST run started, and merges into it: stores and strains
+// already on the week are kept, anything new is added to the same week. state.weeks[WEEK] = {since, pos}.
+state.weeks = state.weeks || {};
+const priorRun = state.weeks[WEEK] || null;
+const since = new Date(priorRun ? priorRun.since : state.lastCutoff);
 
 /* ---------- effective date ---------- */
 function effectiveDate(o) {
@@ -132,8 +137,9 @@ for (const [k, n] of Object.entries(notes)) {
 
 /* ---------- drops for WEEK ---------- */
 const orders = L.readOrders(opt.orders);
-const published = new Set(state.publishedPOs || []);
-const report = { holds: [], newC11: new Map(), skipped: [], used: [] };
+const ownPOs = new Set(priorRun ? priorRun.pos : []); // this week's own orders are read again, not skipped
+const published = new Set((state.publishedPOs || []).filter(po => !ownPOs.has(po)));
+const report = { holds: [], newC11: new Map(), skipped: [], used: [], kept: [] };
 const rows = new Map(); // shop|city -> row
 for (const o of orders.sort((a, b) => a.transferDate < b.transferDate ? -1 : 1)) {
   if (!rules.includeStages.includes(o.stage) || !rules.includeOrderTypes.includes(o.orderType)) continue;
@@ -154,6 +160,20 @@ for (const o of orders.sort((a, b) => a.transferDate < b.transferDate ? -1 : 1))
   report.used.push(o.poNumber);
 }
 const drops = [...rows.values()];
+// merge with what this week already shows, so a re-run never drops a store or strain
+const added = [];
+if (priorRun) {
+  for (const old of R.drops.filter(d => d[0] === WEEK)) {
+    const k = norm(old[1]) + '|' + norm(old[2]);
+    const cur = rows.get(k);
+    if (!cur) { drops.push([WEEK, old[1], old[2], old[3], old[4].slice()]); report.kept.push(`${old[1]} | ${old[2]}`); continue; }
+    const extra = cur[4].filter(i => !old[4].includes(i));
+    if (extra.length) added.push(`${old[1]} | ${old[2]}: + ${extra.map(i => R.products[i][0]).join(', ')}`);
+    cur[4] = [...new Set(old[4].concat(cur[4]))];
+  }
+  const had = new Set(R.drops.filter(d => d[0] === WEEK).map(d => norm(d[1]) + '|' + norm(d[2])));
+  for (const d of drops) if (!had.has(norm(d[1]) + '|' + norm(d[2]))) added.push(`${d[1]} | ${d[2]}: new store this week`);
+}
 
 /* ---------- deals from the sheet ---------- */
 const dealFinder = L.dealFinder;
@@ -221,6 +241,7 @@ const pname = i => R.products[i][0] + (R.products[i][1] ? ' x ' + R.products[i][
 const out = [];
 out.push(`# Release update: Week of ${WEEK}`, '');
 out.push(`- Orders window: ${since.toISOString()} to ${NOW.toISOString()}`);
+if (priorRun) out.push(`- RE-RUN of Week of ${WEEK} (already published): merged into the same week. Added: ${added.length ? added.join('; ') : 'nothing new'}${report.kept.length ? '. Kept from the earlier run (not in this run\'s orders): ' + report.kept.join(', ') : ''}`);
 out.push(`- Stores published: ${drops.length} (from ${report.used.length} orders)`);
 out.push(`- New flavors (newly listed on the live menu Sunday ${newWeekend}): ${newIds.length ? newIds.map(pname).join(', ') : 'none logged'}`);
 out.push(fotmPicks ? `- Strains of the Month (${MONTH}): ${fotmPicks.map(k => { const i = ranked.find(j => `${R.products[j][0]}|${R.products[j][1]}` === k); return i == null ? k.replace(/\|$/, '') : `${pname(i)} (${tierName(tier(i))}, ${poolStores.get(i)} store drops in 4 wks)`; }).join('; ')}${fotmNote ? ' (' + fotmNote + ')' : ''}`
@@ -252,6 +273,8 @@ window.FLAVORS_OF_THE_MONTH = ${JSON.stringify(Object.fromEntries(Object.entries
 `);
 
 state.lastCutoff = NOW.toISOString();
+state.weeks[WEEK] = { since: since.toISOString(), pos: [...new Set((priorRun ? priorRun.pos : []).concat(report.used))] };
+for (const w of Object.keys(state.weeks)) if (w < CUTOFF) delete state.weeks[w];
 state.publishedPOs = [...new Set((state.publishedPOs || []).concat(report.used))].slice(-3000);
 delete state.menuSnapshot;
 for (const w of Object.keys(state.menuLog || {})) if (w < addDays(CUTOFF, -30)) delete state.menuLog[w];
