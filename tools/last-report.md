@@ -1,10 +1,10 @@
 # Release update: Week of 2026-11-16
 
-- Orders window: 2026-11-09T08:00:00.000Z to 2026-11-14T19:53:26.635Z
+- Orders window: 2026-11-09T08:00:00.000Z to 2026-11-15T22:22:35.583Z
 - RE-RUN of Week of 2026-11-16 (already published): merged into the same week. Added: nothing new
 - Stores published: 28 (from 28 orders)
 - New flavors (newly listed on the live menu Sunday 2026-11-01): Red Ringz, Satsuma Sherbert
-- Strains of the Month (2026-11): Head Crack (Head Crack, 12 store drops in 4 wks); Uncrustablez (peanut buttery, 21 store drops in 4 wks)
+- Strains of the Month (2026-11): unchanged (Head Crack|, Uncrustablez|); next pick on the first run of next month
 - New-flavor source: Sunday 2026-11-01: owner-provided list
 - Deals updated on 14 store rows
 
@@ -16,7 +16,7 @@
 - Higher Ground | Baldwin Park (40% OFF VUZE WEDNESDAY & SATURDAY): Zkunk, Government Tangie, Mochalope, Palomita, Red Ringz, Satsuma Sherbert
 - Higher Ground | Moreno Valley (40% OFF VUZE WEDNESDAY & SATURDAY): Hindu Kush, Zkunk, Government Tangie, Mochalope, Palomita, Red Ringz, Satsuma Sherbert
 - GOAT Global | Westwood (40% off VUZE Wednesdays): Uncrustablez, Spritzer Bomb, Apricot Mintz, Hindu Kush, Zkunk, Government Tangie, Mochalope, Palomita, Red Ringz, Satsuma Sherbert
-- Jungle Boys | La Mesa (25% off Sunday - Flav / 25% off Thursday - Flav & Vuze / GENERAL BOGO 50% off Mondays): Government Tangie, Mochalope, Palomita, Red Ringz, Satsuma Sherbert
+- Jungle Boys | La Mesa (25% off Thursday - VUZE / GENERAL BOGO 50% off Mondays): Government Tangie, Mochalope, Palomita, Red Ringz, Satsuma Sherbert
 - OTC | Costa Mesa (25% OFF Fridays, Saturdays, & Sundays): Hindu Kush, Red Ringz, Satsuma Sherbert
 - Wellgreens | Vista (40% off Mondays): Satsuma Sherbert, Red Ringz, Palomita, Mochalope, Government Tangie, Zkunk, Hindu Kush
 - OTC | Manteca (25% OFF Fridays, Saturdays, & Sundays): Government Tangie, Hindu Kush

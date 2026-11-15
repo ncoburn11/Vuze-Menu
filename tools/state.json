@@ -1,6 +1,6 @@
 {
   "_doc": "Maintained by tools/weekly.js. lastCutoff = end of the last published order window. menuLog = owner-provided lists of flavors added to the live menu, keyed by Sunday (used instead of the repo history for those Sundays).",
-  "lastCutoff": "2026-11-14T19:53:26.635Z",
+  "lastCutoff": "2026-11-15T22:22:35.583Z",
   "publishedPOs": [
     51817,
     51786,
